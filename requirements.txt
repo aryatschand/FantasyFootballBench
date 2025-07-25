@@ -1,0 +1,3 @@
+nfl_data_py
+pandas
+openai
