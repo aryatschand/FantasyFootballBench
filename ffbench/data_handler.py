@@ -1,59 +1,79 @@
-import nfl_data_py as nfl
 import pandas as pd
 import os
 
 class DataHandler:
-    def __init__(self, season, data_dir="ffbench/data_cache"):
+    def __init__(self, data_dir="../data"):
         """
-        Initializes the DataHandler and pre-fetches all necessary data.
+        Initializes the DataHandler to work with spreadsheets in the /data folder.
         """
-        self.season = season
-        self.data_dir = data_dir
-        self.historical_data_path = os.path.join(self.data_dir, f"historical_data_{season-1}.parquet")
-        self.weekly_data_path_template = os.path.join(self.data_dir, f"weekly_data_{season}_week_{{week}}.parquet")
+        self.data_dir = os.path.abspath(data_dir)
 
-        if not os.path.exists(self.data_dir):
-            os.makedirs(self.data_dir)
+    def read_spreadsheet(self, file_path):
+        """
+        Generic function to read data from a spreadsheet.
+        """
+        try:
+            if os.path.exists(file_path):
+                return pd.read_csv(file_path)
+            else:
+                print(f"Spreadsheet not found: {file_path}")
+                return pd.DataFrame()
+        except Exception as e:
+            print(f"Error reading spreadsheet {file_path}: {e}")
+            return pd.DataFrame()
 
-        self._cache_historical_data()
-        self._cache_weekly_data()
+    def read_byes(self, year):
+        file_path = os.path.join(self.data_dir, str(year), "Byes.csv")
+        return self.read_spreadsheet(file_path)
 
+    def read_fantasy_defense_by_season(self, year):
+        file_path = os.path.join(self.data_dir, str(year), "FantasyDefenseBySeason.csv")
+        return self.read_spreadsheet(file_path)
 
-    def _cache_historical_data(self):
-        """
-        Caches historical player data up to the simulated season.
-        """
-        if not os.path.exists(self.historical_data_path):
-            print(f"Caching historical data up to {self.season -1}...")
-            historical_seasons = range(2018, self.season) # 5 years of history
-            df = nfl.import_seasonal_data(list(historical_seasons))
-            df.to_parquet(self.historical_data_path)
-    
-    def _cache_weekly_data(self):
-        """
-        Caches all weekly data for the simulated season.
-        """
-        print(f"Caching weekly data for the {self.season} season...")
-        for week in range(1, 18): # Cache all 17 weeks of the regular season
-            weekly_data_path = self.weekly_data_path_template.format(week=week)
-            if not os.path.exists(weekly_data_path):
-                df = nfl.import_weekly_data([self.season], [week])
-                if not df.empty:
-                    df.to_parquet(weekly_data_path)
+    def read_fantasy_defense_projections_by_season(self, year):
+        file_path = os.path.join(self.data_dir, str(year), "FantasyDefenseProjectionsBySeason.csv")
+        return self.read_spreadsheet(file_path)
 
+    def read_player_season_projection_stats(self, year):
+        file_path = os.path.join(self.data_dir, str(year), "PlayerSeasonProjectionStats.csv")
+        return self.read_spreadsheet(file_path)
 
-    def get_historical_player_stats(self):
-        """
-        Fetches historical player stats from the local cache.
-        """
-        return pd.read_parquet(self.historical_data_path)
+    def read_rookies(self, year):
+        file_path = os.path.join(self.data_dir, str(year), "Rookies.csv")
+        return self.read_spreadsheet(file_path)
 
-    def get_weekly_player_stats(self, week):
-        """
-        Fetches weekly player stats for a given week from the local cache.
-        """
-        weekly_data_path = self.weekly_data_path_template.format(week=week)
-        if os.path.exists(weekly_data_path):
-            return pd.read_parquet(weekly_data_path)
-        else:
-            return pd.DataFrame() 
+    def read_standings(self, year):
+        file_path = os.path.join(self.data_dir, str(year), "Standings.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_fantasy_defense_by_game(self, year, week):
+        file_path = os.path.join(self.data_dir, str(year), str(week), "FantasyDefenseByGame.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_fantasy_defense_projections_by_game(self, year, week):
+        file_path = os.path.join(self.data_dir, str(year), str(week), "FantasyDefenseProjectionsByGame.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_player_game_projection_stats_by_week(self, year, week):
+        file_path = os.path.join(self.data_dir, str(year), str(week), "PlayerGameProjectionStatsByWeek.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_player_game_stats_by_week(self, year, week):
+        file_path = os.path.join(self.data_dir, str(year), str(week), "PlayerGameStatsByWeek.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_free_agents(self):
+        file_path = os.path.join(self.data_dir, "other", "FreeAgents.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_players(self):
+        file_path = os.path.join(self.data_dir, "other", "Players.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_teams(self):
+        file_path = os.path.join(self.data_dir, "other", "Teams.csv")
+        return self.read_spreadsheet(file_path)
+
+    def read_timeframes(self):
+        file_path = os.path.join(self.data_dir, "other", "Timeframes.csv")
+        return self.read_spreadsheet(file_path)

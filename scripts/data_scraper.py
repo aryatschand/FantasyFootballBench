@@ -1,95 +1,103 @@
-import os
-import pandas as pd
 import requests
-from bs4 import BeautifulSoup
-import time
+import csv
 import re
+import os
 
-def get_pro_football_reference_player_stats(year: int, week: int) -> pd.DataFrame:
-    """
-    Scrapes weekly player stats for a given year and week from Pro-Football-Reference.
-    """
-    url = f"https://www.pro-football-reference.com/years/{year}/week_{week}.htm"
-    
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(f"Could not retrieve data for week {week}: {e}")
-        return pd.DataFrame()
+## Gets API Key from specified path
+def read_api_key(path='../../apiKeys/sportsData.txt'):
+    abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), path))
+    with open(abs_path, 'r') as f:
+        return f.read().strip()
 
-    soup = BeautifulSoup(response.content, 'html.parser')
-    
-    # The stats are in a commented-out section, so we need to find the comments
-    comments = soup.find_all(string=lambda text: isinstance(text, str) and 'passing' in text)
-    
-    all_dfs = []
-    
-    for comment in comments:
-        comment_soup = BeautifulSoup(comment, 'html.parser')
-        
-        # Passing stats
-        passing_table = comment_soup.find('table', {'id': 'passing'})
-        if passing_table:
-            df = pd.read_html(str(passing_table))[0]
-            df.columns = ['_'.join(col).strip() for col in df.columns.values]
-            df.rename(columns={'Unnamed: 0_level_0_Player': 'Player'}, inplace=True)
-            df['Week'] = week
-            df['Year'] = year
-            all_dfs.append(df)
-            
-        # Rushing and Receiving stats
-        rushing_and_receiving_table = comment_soup.find('table', {'id': 'rushing_and_receiving'})
-        if rushing_and_receiving_table:
-            df = pd.read_html(str(rushing_and_receiving_table))[0]
-            df.columns = ['_'.join(col).strip() for col in df.columns.values]
-            df.rename(columns={'Unnamed: 0_level_0_Player': 'Player'}, inplace=True)
-            df['Week'] = week
-            df['Year'] = year
-            all_dfs.append(df)
+# HTTP GET request locations
+API_KEY = read_api_key()
+SEASONS = [2022, 2023, 2024]
+WEEKS = list(range(1, 18))
+ENDPOINTS = [
+    'https://api.sportsdata.io/api/nfl/fantasy/json/Byes/{season}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/Players',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/FreeAgents',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/Rookies/{season}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/Standings/{season}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/Teams',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/Timeframes/all',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/FantasyDefenseByGame/{season}/{week}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/FantasyDefenseBySeason/{season}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/PlayerGameStatsByWeek/{season}/{week}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/PlayerSeasonStats/{season}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/FantasyDefenseProjectionsByGame/{season}/{week}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/FantasyDefenseProjectionsBySeason/{season}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/PlayerGameProjectionStatsByWeek/{season}/{week}',
+    'https://api.sportsdata.io/api/nfl/fantasy/json/PlayerSeasonProjectionStats/{season}'
+]
+FIELDS = [
+    # Add the fields you want in your CSV, e.g. 'PlayerID', 'Name', 'Team', ...
+]
 
-    if not all_dfs:
-        return pd.DataFrame()
+def fetch_json(url):
+    headers = {'Ocp-Apim-Subscription-Key': API_KEY}
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
 
-    # Merge the dataframes
-    merged_df = all_dfs[0]
-    if len(all_dfs) > 1:
-        for df in all_dfs[1:]:
-            merged_df = pd.merge(merged_df, df, on=['Player', 'Week', 'Year'], how='outer')
+# Loops through endpoints for seasons and weeks
+def expand_endpoints():
+    expanded = []
+    for endpoint in ENDPOINTS:
+        if '{season}' in endpoint and '{week}' in endpoint:
+            for season in SEASONS:
+                for week in WEEKS:
+                    expanded.append(endpoint.format(season=season, week=week))
+        elif '{season}' in endpoint:
+            for season in SEASONS:
+                expanded.append(endpoint.format(season=season))
+        elif '{week}' in endpoint:
+            for week in WEEKS:
+                expanded.append(endpoint.format(week=week))
+        else:
+            expanded.append(endpoint)
+    return expanded
 
-    return merged_df
+def get_csv_path(url):
+    match = re.search(r'/fantasy/json/([^/]+)', url)
+    endpoint = match.group(1) if match else 'data'
+    season_match = re.search(r'(?:/|=)(20\d{2})(?:/|$)', url)
+    week_match = re.search(r'(?:/|=)(\d{1,2})(?:/|$)', url)
+    season = season_match.group(1) if season_match else None
+    week = week_match.group(1) if week_match else None
 
+    filename = f'{endpoint}.csv'
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+    if season and week:
+        dir_path = os.path.join(base_dir, str(season), str(week))
+    elif season:
+        dir_path = os.path.join(base_dir, str(season))
+    else:
+        dir_path = os.path.join(base_dir, 'other')
+    os.makedirs(dir_path, exist_ok=True)
+    return os.path.join(dir_path, filename)
 
 def main():
-    year = 2023
-    all_weekly_data = []
+    urls = expand_endpoints()
+    for url in urls:
+        print(f'Fetching: {url}')
+        try:
+            data = fetch_json(url)
+            if isinstance(data, dict):
+                data = [data]
+            if not data:
+                print(f'No data for {url}')
+                continue
+            # Auto-detect fields from the first item
+            fields = list(data[0].keys()) if isinstance(data[0], dict) else []
+            csv_path = get_csv_path(url)
+            with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=fields)
+                writer.writeheader()
+                writer.writerows(data)
+            print(f'Data written to {csv_path}')
+        except Exception as e:
+            print(f'Error fetching {url}: {e}')
 
-    for week in range(1, 19):
-        print(f"Scraping data for {year}, Week {week}...")
-        weekly_stats = get_pro_football_reference_player_stats(year, week)
-        
-        if not weekly_stats.empty:
-            all_weekly_data.append(weekly_stats)
-        
-        time.sleep(2)  # Be a good citizen
-
-    if not all_weekly_data:
-        print("No data was scraped. Exiting.")
-        return
-
-    # Combine all weekly data
-    combined_df = pd.concat(all_weekly_data, ignore_index=True)
-
-    # Clean up player names (remove symbols like '*' and '+')
-    combined_df['Player'] = combined_df['Player'].str.replace(r'[\\*+]', '', regex=True)
-
-    # Save to CSV
-    output_dir = "data"
-    os.makedirs(output_dir, exist_ok=True)
-    file_path = os.path.join(output_dir, f"player_stats_{year}.csv")
-    combined_df.to_csv(file_path, index=False)
-    
-    print(f"Data saved to {file_path}")
-
-if __name__ == "__main__":
-    main() 
+if __name__ == '__main__':
+    main()
