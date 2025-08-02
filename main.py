@@ -78,6 +78,47 @@ def main():
     allen_passing_yards_2024 = data_handler.read_player_game_stats_by_week(2024, 14)[data_handler.read_player_game_stats_by_week(2024, 14)["Name"] == "Josh Allen"]["PassingYards"]
     print(allen_passing_yards_2024)
 
+    # Test cases for natural language response generation
+    print("\n--- Testing natural language response for Justin Jefferson's 2023 Receiving Yards ---")
+    response_1 = data_handler.generate_natural_language_response(
+        player_name="Justin Jefferson",
+        stat_type="ReceivingYards",
+        time_range={"start_year": 2023, "end_year": 2023}
+    )
+    print(response_1)
+
+    print("\n--- Testing natural language response for Josh Allen's Passing Yards from 2022 to 2024 ---")
+    response_2 = data_handler.generate_natural_language_response(
+        player_name="Josh Allen",
+        stat_type="PassingYards",
+        time_range={"start_year": 2022, "end_year": 2024}
+    )
+    print(response_2)
+
+    print("\n--- Testing natural language response for Justin Jefferson's Receiving Stats from 2022 to 2023 ---")
+    response_3 = data_handler.generate_natural_language_response(
+        player_name="Justin Jefferson",
+        stat_type="ReceivingYards",
+        time_range={"start_year": 2022, "end_year": 2023}
+    )
+    print(response_3)
+
+    print("\n--- Testing natural language response for a non-existent stat type ---")
+    response_4 = data_handler.generate_natural_language_response(
+        player_name="Justin Jefferson",
+        stat_type="NonExistentStat",
+        time_range={"start_year": 2023, "end_year": 2023}
+    )
+    print(response_4)
+
+    print("\n--- Testing natural language response with an invalid time range ---")
+    response_5 = data_handler.generate_natural_language_response(
+        player_name="Justin Jefferson",
+        stat_type="ReceivingYards",
+        time_range={"start_year": None, "end_year": 2023}
+    )
+    print(response_5)
+
 
 
 if __name__ == "__main__":

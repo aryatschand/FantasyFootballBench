@@ -77,3 +77,49 @@ class DataHandler:
     def read_timeframes(self):
         file_path = os.path.join(self.data_dir, "other", "Timeframes.csv")
         return self.read_spreadsheet(file_path)
+
+    def generate_natural_language_response(self, player_name, stat_type, time_range):
+        """
+        Generate a natural language response for a player's stats.
+
+        Args:
+            player_name (str): Name of the player (e.g., "Justin Jefferson").
+            stat_type (str): Type of stat (e.g., "ReceivingYards").
+            time_range (dict): Time range for the stats (e.g., {"start_year": 2022, "end_year": 2024}).
+
+        Returns:
+            str: A natural language response summarizing the requested stats.
+        """
+        start_year = time_range.get("start_year")
+        end_year = time_range.get("end_year")
+
+        # Validate input
+        if not start_year or not end_year:
+            return "Invalid time range provided. Please specify both start and end years."
+
+        # Fetch data for the specified time range
+        stats = []
+        for year in range(start_year, end_year + 1):
+            for week in range(1, 18):  # Assuming 17 weeks in a season
+                weekly_stats = self.read_player_game_stats_by_week(year, week)
+                if not weekly_stats.empty:
+                    player_stats = weekly_stats[weekly_stats["Name"] == player_name]
+                    stats.append(player_stats)
+
+        # Combine stats across weeks and years
+        if stats:
+            combined_stats = pd.concat(stats, ignore_index=True)
+        else:
+            return f"No data found for {player_name} from {start_year} to {end_year}."
+
+        # Aggregate the requested stat
+        if stat_type not in combined_stats.columns:
+            return f"Stat type '{stat_type}' not found for {player_name}."
+
+        total_stat = combined_stats[stat_type].sum()
+
+        # Format the response
+        response = (
+            f"From {start_year} to {end_year}, {player_name} recorded a total of {total_stat} {stat_type}."
+        )
+        return response
