@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Ja'Marr Chase,CIN,WR,403.00,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Saquon Barkley,PHI,RB,349.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Kyler Murray,ARI,QB,295.24,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Brock Purdy,SF,QB,266.86,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Jerry Jeudy,CLE,WR,236.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Tony Pollard,TEN,RB,198.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Christian Kirk,JAX,WR,70.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Tyler Conklin,NYJ,TE,119.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Wan'Dale Robinson,NYG,WR,182.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Justice Hill,BAL,RB,127.10,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+Justin Fields,PIT,QB,119.14,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+David Njoku,CLE,TE,144.50,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0

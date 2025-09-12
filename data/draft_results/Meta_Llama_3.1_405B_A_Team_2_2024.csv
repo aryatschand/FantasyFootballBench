@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model,ModelName
+Bijan Robinson,ATL,RB,339.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Jahmyr Gibbs,DET,RB,362.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Bo Nix,DEN,QB,317.20,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Justin Herbert,LAC,QB,279.40,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Amari Cooper,BUF,WR,122.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Baker Mayfield,TB,QB,363.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Anthony Firkser,KC,TE,0.00,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Patrick Taylor Jr.,SF,RB,29.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Jayden Daniels,WAS,QB,349.82,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Kirk Cousins,ATL,QB,176.32,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Anthony Richardson,IND,QB,161.36,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A
+Daniel Jones,NYG,QB,135.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0,Meta Llama 3.1 405B A

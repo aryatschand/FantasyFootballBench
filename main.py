@@ -22,102 +22,58 @@ def main():
     #     for i in range(num_teams)
     # ]
 
-    # 3. Fetch historical player data for the draft
-    print("\n--- Testing read_player_game_stats_by_week for 2022, Week 1 ---")
-    player_stats = data_handler.read_player_game_stats_by_week(2022, 1)  # Load data for the previous season, week 1
-    print(player_stats.head())
+    # 3. Test the new natural language data access functions
+    print("\n--- Testing new natural language data access ---")
 
-    # Filter for draftable players
-    draftable_players = player_stats[
-        player_stats["Position"].isin(["QB", "RB", "WR", "TE"])
-    ].head(200)
+    # Test player season stats
+    print("\n--- Player Season Stats (Natural Language) ---")
+    season_stats = data_handler.get_player_season_stats("Josh Allen", 2024, current_year=2024, current_week=10)
+    print(season_stats)
 
-    # Test reading data from Byes.csv
-    print("\n--- Testing read_byes for 2023 ---")
-    byes_2023 = data_handler.read_byes(2023)
-    print(byes_2023.head())
+    # Test player weekly stats
+    print("\n--- Player Weekly Stats (Natural Language) ---")
+    weekly_stats = data_handler.get_player_weekly_stats("Josh Allen", 1, 2024, current_year=2024, current_week=10)
+    print(weekly_stats)
 
-    # Test reading data from FantasyDefenseBySeason.csv
-    print("\n--- Testing read_fantasy_defense_by_season for 2023 ---")
-    defense_2023 = data_handler.read_fantasy_defense_by_season(2023)
-    print(defense_2023.head())
+    # Test player projections
+    print("\n--- Player Projections (Natural Language) ---")
+    projections = data_handler.get_player_projection_stats("Josh Allen", 11, 2024, current_year=2024, current_week=10)
+    print(projections)
 
-    # Test reading data from FreeAgents.csv
-    print("\n--- Testing read_free_agents ---")
-    free_agents = data_handler.read_free_agents()
-    print(free_agents.head())
+    # Test top players
+    print("\n--- Top QB Performers (Natural Language) ---")
+    top_qbs = data_handler.get_all_players_season_stats(2024, position="QB", current_year=2024, top_n=5)
+    print(top_qbs)
 
-    # Test reading data from Players.csv
-    print("\n--- Testing read_players ---")
-    players = data_handler.read_players()
-    print(players.head())
+    # Test the new weekly stats function for Justin Jefferson
+    print("\n--- Justin Jefferson Week 1, 2023 (Natural Language) ---")
+    jj_weekly = data_handler.get_player_weekly_stats("Justin Jefferson", 1, 2023, current_year=2024, current_week=10)
+    print(jj_weekly)
 
-    # Test reading data from Teams.csv
-    print("\n--- Testing read_teams ---")
-    teams = data_handler.read_teams()
-    print(teams.head())
+    # Test the new weekly stats function for Josh Allen
+    print("\n--- Josh Allen Week 14, 2024 (Natural Language) ---")
+    ja_weekly = data_handler.get_player_weekly_stats("Josh Allen", 14, 2024, current_year=2024, current_week=15)  # Week 15 is current
+    print(ja_weekly)
 
-    # Test reading data from Timeframes.csv
-    print("\n--- Testing read_timeframes ---")
-    timeframes = data_handler.read_timeframes()
-    print(timeframes.head())
+    # Additional tests with different players and scenarios
+    print("\n--- Testing with different players ---")
 
-    # Test filtering for Justin Jefferson's stats in Week 1 of the 2023 season
-    print("\n--- Testing filtering for Justin Jefferson's stats in Week 1, 2023 ---")
-    week1_stats_2023 = data_handler.read_player_game_stats_by_week(2023, 1)
-    jefferson_stats = week1_stats_2023[week1_stats_2023["Name"] == "Justin Jefferson"]
-    print(jefferson_stats)
+    # Test RB stats
+    print("\n--- Christian McCaffrey Season Stats ---")
+    cmc_stats = data_handler.get_player_season_stats("Christian McCaffrey", 2024, current_year=2024, current_week=10)
+    print(cmc_stats)
 
-    # Test extracting Justin Jefferson's yards from Week 1 of the 2023 season
-    print("\n--- Testing extracting Justin Jefferson's yards in Week 1, 2023 ---")
-    jefferson_yards = jefferson_stats["ReceivingYards"]
-    print(jefferson_yards)
+    # Test WR stats
+    print("\n--- Ja'Marr Chase Season Stats ---")
+    chase_stats = data_handler.get_player_season_stats("Ja'Marr Chase", 2024, current_year=2024, current_week=10)
+    print(chase_stats)
 
-    # Test extracting Josh Allen's passing yards from Week 14 of the 2024 season in one line
-    print("\n--- Testing extracting Josh Allen's passing yards in Week 14, 2024 (one line) ---")
-    allen_passing_yards_2024 = data_handler.read_player_game_stats_by_week(2024, 14)[data_handler.read_player_game_stats_by_week(2024, 14)["Name"] == "Josh Allen"]["PassingYards"]
-    print(allen_passing_yards_2024)
+    # Test TE stats
+    print("\n--- Brock Bowers Projections ---")
+    bowers_proj = data_handler.get_player_projection_stats("Brock Bowers", 11, 2024, current_year=2024, current_week=10)
+    print(bowers_proj)
 
-    # Test cases for natural language response generation
-    print("\n--- Testing natural language response for Justin Jefferson's 2023 Receiving Yards ---")
-    response_1 = data_handler.generate_natural_language_response(
-        player_name="Justin Jefferson",
-        stat_type="ReceivingYards",
-        time_range={"start_year": 2023, "end_year": 2023}
-    )
-    print(response_1)
-
-    print("\n--- Testing natural language response for Josh Allen's Passing Yards from 2022 to 2024 ---")
-    response_2 = data_handler.generate_natural_language_response(
-        player_name="Josh Allen",
-        stat_type="PassingYards",
-        time_range={"start_year": 2022, "end_year": 2024}
-    )
-    print(response_2)
-
-    print("\n--- Testing natural language response for Justin Jefferson's Receiving Stats from 2022 to 2023 ---")
-    response_3 = data_handler.generate_natural_language_response(
-        player_name="Justin Jefferson",
-        stat_type="ReceivingYards",
-        time_range={"start_year": 2022, "end_year": 2023}
-    )
-    print(response_3)
-
-    print("\n--- Testing natural language response for a non-existent stat type ---")
-    response_4 = data_handler.generate_natural_language_response(
-        player_name="Justin Jefferson",
-        stat_type="NonExistentStat",
-        time_range={"start_year": 2023, "end_year": 2023}
-    )
-    print(response_4)
-
-    print("\n--- Testing natural language response with an invalid time range ---")
-    response_5 = data_handler.generate_natural_language_response(
-        player_name="Justin Jefferson",
-        stat_type="ReceivingYards",
-        time_range={"start_year": None, "end_year": 2023}
-    )
-    print(response_5)
+    print("\n--- All tests completed successfully! ---")
 
 
 

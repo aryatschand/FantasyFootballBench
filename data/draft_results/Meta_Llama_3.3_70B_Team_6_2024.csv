@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Josh Allen,BUF,QB,377.04,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Derrick Henry,BAL,RB,336.40,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Alvin Kamara,NO,RB,265.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Drake London,ATL,WR,280.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Rico Dowdle,DAL,RB,197.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Pat Freiermuth,PIT,TE,168.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Aaron Rodgers,NYJ,QB,252.58,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+DK Metcalf,SEA,WR,191.20,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Jameson Williams,DET,WR,212.20,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Bryce Young,CAR,QB,195.02,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Will Levis,TEN,QB,117.94,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+Travis Kelce,KC,TE,195.40,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0

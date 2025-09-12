@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Justin Jefferson,MIN,WR,317.48,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Jalen Hurts,PHI,QB,315.12,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Kyren Williams,LAR,RB,272.10,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Mark Andrews,BAL,TE,188.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Aaron Jones,MIN,RB,241.60,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Zay Flowers,BAL,WR,209.50,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Brock Bowers,LV,TE,262.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Kyle Pitts,ATL,TE,131.20,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Keenan Allen,CHI,WR,184.40,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Zach Charbonnet,SEA,RB,186.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Dallas Goedert,PHI,TE,103.60,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
+Jared Goff,DET,QB,322.46,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0
