@@ -1,0 +1,33 @@
+SeasonType,Season,Conference,Division,Team,Name,Wins,Losses,Ties,Percentage,PointsFor,PointsAgainst,NetPoints,Touchdowns,DivisionWins,DivisionLosses,ConferenceWins,ConferenceLosses,TeamID,DivisionTies,ConferenceTies,GlobalTeamID,DivisionRank,ConferenceRank
+1,2023,AFC,East,BUF,Buffalo Bills,11,6,0,0.647,451,311,140,54,4,2,7,5,4,0,0,4,1,2
+1,2023,AFC,East,MIA,Miami Dolphins,11,6,0,0.647,496,391,105,61,4,2,7,5,19,0,0,19,2,6
+1,2023,AFC,East,NYJ,New York Jets,7,10,0,0.412,268,355,-87,22,2,4,4,8,24,0,0,24,3,13
+1,2023,AFC,East,NE,New England Patriots,4,13,0,0.235,236,366,-130,27,2,4,4,8,21,0,0,21,4,16
+1,2023,AFC,North,BAL,Baltimore Ravens,13,4,0,0.765,483,280,203,55,3,3,8,4,3,0,0,3,1,1
+1,2023,AFC,North,CLE,Cleveland Browns,11,6,0,0.647,396,362,34,42,3,3,8,4,8,0,0,8,2,5
+1,2023,AFC,North,PIT,Pittsburgh Steelers,10,7,0,0.588,304,324,-20,31,5,1,7,5,28,0,0,28,3,7
+1,2023,AFC,North,CIN,Cincinnati Bengals,9,8,0,0.529,366,384,-18,41,1,5,4,8,7,0,0,7,4,8
+1,2023,AFC,South,HOU,Houston Texans,10,7,0,0.588,377,353,24,40,4,2,7,5,13,0,0,13,1,4
+1,2023,AFC,South,IND,Indianapolis Colts,9,8,0,0.529,396,415,-19,42,3,3,7,5,14,0,0,14,3,10
+1,2023,AFC,South,JAX,Jacksonville Jaguars,9,8,0,0.529,377,371,6,41,4,2,6,6,15,0,0,15,2,9
+1,2023,AFC,South,TEN,Tennessee Titans,6,11,0,0.353,305,367,-62,31,1,5,4,8,34,0,0,34,4,14
+1,2023,AFC,West,KC,Kansas City Chiefs,11,6,0,0.647,371,294,77,39,4,2,9,3,16,0,0,16,1,3
+1,2023,AFC,West,DEN,Denver Broncos,8,9,0,0.471,357,413,-56,38,3,3,5,7,10,0,0,10,3,12
+1,2023,AFC,West,LV,Las Vegas Raiders,8,9,0,0.471,332,331,1,36,4,2,6,6,25,0,0,25,2,11
+1,2023,AFC,West,LAC,Los Angeles Chargers,5,12,0,0.294,346,398,-52,36,1,5,3,9,29,0,0,29,4,15
+1,2023,NFC,East,DAL,Dallas Cowboys,12,5,0,0.706,509,315,194,57,5,1,9,3,9,0,0,9,1,2
+1,2023,NFC,East,PHI,Philadelphia Eagles,11,6,0,0.647,433,428,5,49,4,2,7,5,26,0,0,26,2,5
+1,2023,NFC,East,NYG,New York Giants,6,11,0,0.353,266,407,-141,29,3,3,5,7,23,0,0,23,3,13
+1,2023,NFC,East,WAS,Washington Commanders,4,13,0,0.235,329,518,-189,39,0,6,2,10,35,0,0,35,4,14
+1,2023,NFC,North,DET,Detroit Lions,12,5,0,0.706,461,395,66,58,4,2,8,4,11,0,0,11,1,3
+1,2023,NFC,North,GB,Green Bay Packers,9,8,0,0.529,383,350,33,44,4,2,7,5,12,0,0,12,2,7
+1,2023,NFC,North,MIN,Minnesota Vikings,7,10,0,0.412,344,362,-18,39,2,4,6,6,20,0,0,20,3,10
+1,2023,NFC,North,CHI,Chicago Bears,7,10,0,0.412,360,379,-19,37,2,4,6,6,6,0,0,6,4,11
+1,2023,NFC,South,TB,Tampa Bay Buccaneers,9,8,0,0.529,348,325,23,37,4,2,7,5,33,0,0,33,1,4
+1,2023,NFC,South,NO,New Orleans Saints,9,8,0,0.529,402,327,75,44,4,2,6,6,22,0,0,22,2,9
+1,2023,NFC,South,ATL,Atlanta Falcons,7,10,0,0.412,321,373,-52,32,3,3,4,8,2,0,0,2,3,12
+1,2023,NFC,South,CAR,Carolina Panthers,2,15,0,0.118,236,416,-180,23,1,5,1,11,5,0,0,5,4,16
+1,2023,NFC,West,SF,San Francisco 49ers,12,5,0,0.706,491,298,193,61,5,1,10,2,31,0,0,31,1,1
+1,2023,NFC,West,LAR,Los Angeles Rams,10,7,0,0.588,404,377,27,44,5,1,8,4,32,0,0,32,2,6
+1,2023,NFC,West,SEA,Seattle Seahawks,9,8,0,0.529,364,402,-38,37,2,4,7,5,30,0,0,30,3,8
+1,2023,NFC,West,ARI,Arizona Cardinals,4,13,0,0.235,330,455,-125,36,0,6,3,9,1,0,0,1,4,15

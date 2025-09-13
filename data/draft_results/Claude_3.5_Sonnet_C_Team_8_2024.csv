@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Sam LaPorta,DET,TE,174.60,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Courtland Sutton,DEN,WR,240.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Cade Otton,TB,TE,140.60,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Cole Kmet,CHI,TE,118.40,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Tucker Kraft,GB,TE,161.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Davante Adams,NYJ,WR,239.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Jonathan Taylor,IND,RB,246.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Mike Gesicki,CIN,TE,141.50,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Najee Harris,PIT,RB,204.60,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+James Conner,ARI,RB,249.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Mike Evans,TB,WR,240.40,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Patrick Mahomes,KC,QB,283.02,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0

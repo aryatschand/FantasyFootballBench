@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Terry McLaurin,WAS,WR,267.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Trey McBride,ARI,TE,249.80,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+James Cook,BUF,RB,266.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+David Montgomery,DET,RB,221.72,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Tyreek Hill,MIA,WR,218.20,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Nico Collins,HOU,WR,210.60,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Matthew Stafford,LAR,QB,214.58,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Darnell Mooney,ATL,WR,193.20,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Khalil Shakir,BUF,WR,182.50,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Chase Brown,CIN,RB,253.00,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Tee Higgins,CIN,WR,222.10,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0
+Lamar Jackson,BAL,QB,428.38,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0

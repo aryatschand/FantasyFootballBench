@@ -1,149 +1,236 @@
 import pandas as pd
-from openai import OpenAI
-import os
+import boto3
+import json
+from botocore.exceptions import ClientError
+import dspy
+
+class BedrockLM(dspy.LM):
+    def __init__(self, model_id="arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0", region_name="us-east-2"):
+        super().__init__(model_id)
+        self.model_id = model_id
+        self.client = boto3.client("bedrock-runtime", region_name=region_name)
+
+    def __call__(self, messages=None, **kwargs):
+        if messages:
+            # Extract the prompt from messages
+            prompt = ""
+            for msg in messages:
+                if isinstance(msg, dict) and "content" in msg:
+                    prompt += msg["content"] + "\n"
+                elif hasattr(msg, 'content'):
+                    prompt += msg.content + "\n"
+        else:
+            # Fallback for direct prompt
+            prompt = kwargs.get("prompt", "")
+
+        # Check if we need JSON mode (for DSPy structured output)
+        is_json_mode = kwargs.get("response_format", {}).get("type") == "json_object"
+
+        # For DSPy signatures, we want structured responses
+        if hasattr(self, '_dspy_mode') and self._dspy_mode:
+            is_json_mode = True
+
+        # Detect provider from model_id
+        mid = (self.model_id or "").lower()
+        is_anthropic = "anthropic" in mid
+        is_llama = ("llama" in mid) or ("meta." in mid) or ("us.meta." in mid)
+
+        # Build payload based on provider
+        if is_anthropic:
+            if is_json_mode:
+                content = f"{prompt.strip()}\n\nRespond with a valid JSON object containing the expected fields."
+                payload = {
+                    "anthropic_version": "bedrock-2023-05-31",
+                    "max_tokens": kwargs.get("max_tokens", 2000),
+                    "thinking": {"type": "disabled"},
+                    "messages": [{"role": "user", "content": content}],
+                    "response_format": {"type": "json_object"}
+                }
+            else:
+                payload = {
+                    "anthropic_version": "bedrock-2023-05-31",
+                    "max_tokens": kwargs.get("max_tokens", 1000),
+                    "thinking": {"type": "disabled"},
+                    "messages": [{"role": "user", "content": prompt.strip()}]
+                }
+        elif is_llama:
+            # Meta Llama instruct expects 'prompt'
+            llama_prompt = prompt.strip()
+            if is_json_mode:
+                llama_prompt += "\n\nRespond ONLY with a valid JSON object containing the expected fields."
+            payload = {
+                "prompt": llama_prompt,
+                "max_gen_len": kwargs.get("max_gen_len", 512),
+                "temperature": kwargs.get("temperature", 0.5),
+            }
+        else:
+            # Default fallback: simple prompt schema
+            payload = {"prompt": prompt.strip()}
+
+        response = self.client.invoke_model(
+            modelId=self.model_id,
+            body=json.dumps(payload)
+        )
+        result = json.loads(response["body"].read())
+
+        # Parse response
+        if is_anthropic:
+            if is_json_mode:
+                try:
+                    text_response = result["content"][0]["text"] if result.get("content") else ""
+                    return json.loads(text_response)
+                except (json.JSONDecodeError, IndexError, KeyError):
+                    return result["content"][0]["text"] if result.get("content") else ""
+            else:
+                return result["content"][0]["text"] if result.get("content") else ""
+        elif is_llama:
+            text = result.get("generation", "")
+            if is_json_mode:
+                try:
+                    return json.loads(text)
+                except json.JSONDecodeError:
+                    return text
+            return text
+        else:
+            # Unknown provider, return raw
+            return json.dumps(result)
 
 class LLMManager:
-    def __init__(self, model_name="gpt-4-turbo"):
-        self.model_name = model_name
-        # It's recommended to set the API key as an environment variable
-        self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
-    def _get_llm_response(self, prompt):
+    def __init__(self):
         """
-        Sends a prompt to the LLM and gets a response.
+        Initialize LLMManager without a specific model.
+        Models are specified per call for flexibility.
         """
-        try:
-            response = self.client.chat.completions.create(
-                model=self.model_name,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.7, # Add some creativity
-            )
-            return response.choices[0].message.content.strip()
-        except Exception as e:
-            print(f"Error communicating with OpenAI: {e}")
-            return None # Fallback or error handling
+        pass
 
-    def make_draft_pick(self, team, available_players, historical_data):
+    def call_with_signature(self, model_id, signature_class, **kwargs):
         """
-        Generates a prompt for the LLM to make a draft pick.
+        Generic method to call LLM with any DSPy signature.
+
+        Args:
+            model_id (str): AWS Bedrock model ID to use
+            signature_class: DSPy signature class
+            **kwargs: Arguments to pass to the signature
+
+        Returns:
+            Parsed result object with the expected fields
         """
-        prompt = f"""
-        You are the manager of team "{team.manager_name}".
-        It is week {historical_data.week}. Your matchup is against {historical_data.opponent_name}.
-        Your roster is:
-        {pd.DataFrame([p.__dict__ for p in team.roster]).to_string()}
+        # Build the prompt from the signature and inputs
+        prompt_parts = []
 
-        Based on this information, who would you like to draft? Please respond with the player's full name.
+        # Add input fields to prompt
+        for field_name in ['team_info', 'available_players', 'trade_info']:
+            if field_name in kwargs:
+                field_desc = getattr(signature_class, field_name, None)
+                if field_desc and hasattr(field_desc, 'desc'):
+                    prompt_parts.append(f"{field_desc.desc}: {kwargs[field_name]}")
+                else:
+                    prompt_parts.append(f"{field_name.replace('_', ' ').title()}: {kwargs[field_name]}")
+
+        # Add output instructions based on signature type
+        if signature_class == DraftPickSignature:
+            prompt_parts.append("\nRespond with the draft_pick (just the player's full name).")
+        elif signature_class == ChooseStartersSignature:
+            prompt_parts.append("\nRespond with the starter_lineup (comma-separated player names).")
+        elif signature_class == ProposeTradeSignature:
+            prompt_parts.append("\nRespond with the trade_proposal (players to offer and request format).")
+        elif signature_class == RespondToTradeSignature:
+            prompt_parts.append("\nRespond with the response (either 'accept' or 'reject').")
+
+        prompt = "\n".join(prompt_parts)
+
+        # Call with direct prompt instead of DSPy
+        response = self.call_with_prompt(model_id, prompt)
+
+        # Parse the response based on signature type
+        if signature_class == DraftPickSignature:
+            return type('Result', (), {'draft_pick': response.strip()})()
+        elif signature_class == ChooseStartersSignature:
+            return type('Result', (), {'starter_lineup': response.strip()})()
+        elif signature_class == ProposeTradeSignature:
+            return type('Result', (), {'trade_proposal': response.strip()})()
+        elif signature_class == RespondToTradeSignature:
+            return type('Result', (), {'response': response.strip().lower()})()
+        else:
+            # Generic response
+            return type('Result', (), {'response': response.strip()})()
+
+    def call_with_prompt(self, model_id, prompt, **kwargs):
         """
-        
-        llm_response = self._get_llm_response(prompt)
-        
-        # Simple parsing: find the player name in the response
-        if llm_response:
-            for player_name in available_players['player_name']:
-                if player_name in llm_response:
-                    return available_players[available_players['player_name'] == player_name].iloc[0]
+        Direct prompt-based call without DSPy signature.
 
-        return available_players.iloc[0] # Fallback to top available player
+        Args:
+            model_id (str): AWS Bedrock model ID to use
+            prompt (str): The prompt to send to the model
+            **kwargs: Additional parameters for the model
 
-    def choose_starters(self, team, week, weekly_matchups):
+        Returns:
+            str: Model response
         """
-        Generates a prompt for the LLM to choose starters.
-        """
-        prompt = f"""
-        You are the manager of team "{team.manager_name}".
-        It is week {week}. Your matchup is against {weekly_matchups[team.team_id]}.
-        Your roster is:
-        {pd.DataFrame([p.__dict__ for p in team.roster]).to_string()}
+        lm = BedrockLM(model_id=model_id)
+        return lm(prompt=prompt, **kwargs)
 
-        Select your starting lineup (1 QB, 2 RB, 2 WR, 1 TE, 1 FLEX).
-        Respond with a comma-separated list of player names.
-        """
-        
-        llm_response = self._get_llm_response(prompt)
-        
-        # Parse response to get starters
-        if llm_response:
-            starter_names = [name.strip() for name in llm_response.split(',')]
-            starters = [p for p in team.roster if p.name in starter_names]
-            if len(starters) > 5: # Basic validation
-                return starters
 
-        # Fallback to heuristic
-        starters = []
-        qb_candidates = [p for p in team.roster if p.position == 'QB']
-        if qb_candidates:
-            starters.append(qb_candidates[0])
-        rb_candidates = [p for p in team.roster if p.position == 'RB']
-        if rb_candidates:
-            starters.append(rb_candidates[0])
-            starters.append(rb_candidates[1])
-        wr_candidates = [p for p in team.roster if p.position == 'WR']
-        if wr_candidates:
-            starters.append(wr_candidates[0])
-            starters.append(wr_candidates[1])
-        te_candidates = [p for p in team.roster if p.position == 'TE']
-        if te_candidates:
-            starters.append(te_candidates[0])
-        flex_candidates = [p for p in team.roster if p.position == 'FLEX']
-        if flex_candidates:
-            starters.append(flex_candidates[0])
-            
-        return starters
-    
-    def propose_trade(self, team, opponent_team):
-        """
-        Generates a prompt for the LLM to propose a trade.
-        """
-        prompt = f"""
-        You are the manager of team "{team.manager_name}".
-        You are proposing a trade with team "{opponent_team.manager_name}".
-        Your roster is:
-        {pd.DataFrame([p.__dict__ for p in team.roster]).to_string()}
-        Their roster is:
-        {pd.DataFrame([p.__dict__ for p in opponent_team.roster]).to_string()}
+# Example DSPy signatures for common fantasy football tasks
+# Note: These are provided for reference but the LLMManager uses a simplified approach
+class DraftPickSignature(dspy.Signature):
+    """Make a draft pick based on team info and available players."""
+    team_info = dspy.InputField(desc="Information about the team and current situation")
+    available_players = dspy.InputField(desc="List of available players to choose from")
+    draft_pick = dspy.OutputField(desc="The full name of the player to draft")
 
-        Players to offer: [player1, player2, ...]
-        Players to request: [playerA, playerB, ...]
-        If you don't want to propose a trade, respond with "No trade".
-        """
-        llm_response = self._get_llm_response(prompt)
 
-        if llm_response and "No trade" not in llm_response:
-            # Basic parsing of the trade proposal
-            try:
-                lines = llm_response.split('\n')
-                offered_line = [line for line in lines if "Players to offer:" in line][0]
-                requested_line = [line for line in lines if "Players to request:" in line][0]
+class ChooseStartersSignature(dspy.Signature):
+    """Choose starting lineup based on team roster and matchup."""
+    team_info = dspy.InputField(desc="Information about the team and current matchup")
+    starter_lineup = dspy.OutputField(desc="Comma-separated list of player names for starting lineup (1 QB, 2 RB, 2 WR, 1 TE, 1 FLEX)")
 
-                offered_names = [name.strip() for name in offered_line.split(':')[1].replace('[', '').replace(']', '').split(',')]
-                requested_names = [name.strip() for name in requested_line.split(':')[1].replace('[', '').replace(']', '').split(',')]
 
-                players_offered = [p for p in team.roster if p.name in offered_names]
-                players_requested = [p for p in opponent_team.roster if p.name in requested_names]
+class ProposeTradeSignature(dspy.Signature):
+    """Propose a trade based on team rosters."""
+    team_info = dspy.InputField(desc="Information about your team and opponent's roster")
+    trade_proposal = dspy.OutputField(desc="Trade proposal with players to offer and request, or 'No trade' if none")
 
-                if players_offered and players_requested:
-                    return {"offered": players_offered, "requested": players_requested}
-            except Exception as e:
-                print(f"Error parsing trade response: {e}")
 
-        return None
+class RespondToTradeSignature(dspy.Signature):
+    """Respond to a trade proposal."""
+    trade_info = dspy.InputField(desc="Information about the trade proposal")
+    response = dspy.OutputField(desc="Either 'accept' or 'reject'")
 
-    def respond_to_trade(self, team, trade_proposal):
-        """
-        Generates a prompt for the LLM to respond to a trade proposal.
-        """
-        prompt = f"""
-        You are the manager of team "{team.manager_name}".
-        You have received a trade proposal from team "{trade_proposal['opponent_name']}".
-        Their offer: {pd.DataFrame([p.__dict__ for p in trade_proposal['offered']]).to_string()}
-        Their request: {pd.DataFrame([p.__dict__ for p in trade_proposal['requested']]).to_string()}
 
-        Do you accept or reject this trade? Respond with "accept" or "reject".
-        """
-        llm_response = self._get_llm_response(prompt)
-        
-        if llm_response and "accept" in llm_response.lower():
-            return "accept"
-        
-        return "reject" # Default to rejecting 
+# Usage Examples:
+"""
+# Initialize the LLM manager
+llm_manager = LLMManager()
+
+# Define your model ID
+model_id = "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+
+# Example 1: Draft pick
+result = llm_manager.call_with_signature(
+    model_id=model_id,
+    signature_class=DraftPickSignature,
+    team_info="You need a QB for your fantasy team",
+    available_players="Josh Allen, Patrick Mahomes, Joe Burrow"
+)
+print(f"Draft pick: {result.draft_pick}")
+
+# Example 2: Direct prompt
+response = llm_manager.call_with_prompt(
+    model_id=model_id,
+    prompt="What are the best strategies for fantasy football?"
+)
+print(f"Strategy advice: {response}")
+
+# Example 3: Custom signature
+class CustomSignature(dspy.Signature):
+    question = dspy.InputField(desc="The question to answer")
+    answer = dspy.OutputField(desc="The answer to the question")
+
+result = llm_manager.call_with_signature(
+    model_id=model_id,
+    signature_class=CustomSignature,
+    question="Who will win the Super Bowl?"
+)
+print(f"Prediction: {result.answer}")
+""" 

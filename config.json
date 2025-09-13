@@ -1,0 +1,36 @@
+{
+  "num_teams": 10,
+  "models": [
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0", "name": "Claude 3.5 Sonnet" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0", "name": "Meta Llama 3.1 405B A" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0", "name": "Meta Llama 3.1 405B" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0", "name": "Claude Sonnet 4" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0", "name": "Claude Opus 4.1" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0", "name": "Meta Llama 3.3 70B" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-70b-instruct-v1:0", "name": "Meta Llama 3.1 70B" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0", "name": "Claude 3.5 Sonnet C" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0", "name": "Claude 3.5 Sonnet B" },
+    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0", "name": "Claude Sonnet 4 B" }
+  ],
+  "roster_slots": [
+    { "slot": "QB", "count": 1 },
+    { "slot": "RB", "count": 2 },
+    { "slot": "WR", "count": 2 },
+    { "slot": "TE", "count": 1 },
+    { "slot": "FLEX", "count": 1 },
+    { "slot": "BENCH", "count": 5 }
+  ],
+  "scoring": {
+    "passing_yards": 0.04,
+    "passing_tds": 4,
+    "interceptions": -2,
+    "rushing_yards": 0.1,
+    "rushing_tds": 6,
+    "receptions": 1,
+    "receiving_yards": 0.1,
+    "receiving_tds": 6,
+    "fumbles_lost": -2
+  }
+}
+
+

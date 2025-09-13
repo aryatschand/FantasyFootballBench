@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+De'Von Achane,MIA,RB,299.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Joe Mixon,HOU,RB,240.50,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+D'Andre Swift,CHI,RB,212.50,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+A.J. Brown,PHI,WR,216.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Jaxon Smith-Njigba,SEA,WR,253.00,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Calvin Ridley,TEN,WR,199.20,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Tua Tagovailoa,MIA,QB,177.58,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Isaiah Likely,BAL,TE,123.70,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Austin Ekeler,WAS,RB,132.30,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Noah Fant,SEA,TE,104.00,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Garrett Wilson,NYJ,WR,249.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
+Breece Hall,NYJ,RB,236.90,arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0
