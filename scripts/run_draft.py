@@ -18,6 +18,68 @@ from ffbench.config import get_scoring, get_roster_slots, get_models, get_num_te
 ROSTER_SLOTS = get_roster_slots()
 
 SCORING = get_scoring()
+def _strip_code_fences(text: str):
+    s = text.strip()
+    if s.startswith("```"):
+        # remove first fence line
+        s = s.split("\n", 1)[-1]
+        # remove trailing fence if present
+        if s.endswith("```"):
+            s = s.rsplit("\n", 1)[0]
+    return s.strip()
+
+def _parse_pick_from_text(text: str) -> str:
+    import re
+    text = _strip_code_fences(text)
+    # Try to find "pick": "name"
+    match = re.search(r'"pick"\s*:\s*"([^"]+)"', text, re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+    # Also try without quotes around value
+    match = re.search(r'"pick"\s*:\s*([^,\n}]+)', text, re.IGNORECASE)
+    if match:
+        return match.group(1).strip().strip('"').strip("'")
+    # Fallback: look for any name that matches candidates (but we'll handle that later)
+    return ""
+
+def _parse_candidates_from_text(text: str) -> list:
+    import re
+    text = _strip_code_fences(text)
+    # Try to find "candidates": [ ... ]
+    match = re.search(r'"candidates"\s*:\s*\[([^\]]*)\]', text, re.IGNORECASE | re.DOTALL)
+    if match:
+        content = match.group(1)
+        names = re.findall(r'"([^"]+)"', content)
+        return [n.strip() for n in names if n.strip()]
+    # Fallback: split by comma
+    parts = [p.strip().strip('"').strip("'") for p in text.replace("\n", ",").split(",") if p.strip()]
+    return parts
+
+def _extract_json(text: str):
+    import json as _json
+    s = _strip_code_fences(text)
+    # try direct JSON
+    try:
+        return _json.loads(s)
+    except Exception:
+        pass
+    # try to find first {...} or [ ... ]
+    start = s.find('{')
+    end = s.rfind('}')
+    if start != -1 and end != -1 and end > start:
+        try:
+            return _json.loads(s[start:end+1])
+        except Exception:
+            pass
+    start = s.find('[')
+    end = s.rfind(']')
+    if start != -1 and end != -1 and end > start:
+        try:
+            return _json.loads(s[start:end+1])
+        except Exception:
+            pass
+    return None
+
 
 
 def normalize_stat_keys(row):
@@ -96,7 +158,17 @@ def top_remaining_by_position(player_pool, drafted_set, top_k=10):
 def load_top_players_csv():
     """Load precomputed top players CSV and return full ordered lists per position."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    path = os.path.join(root, "data", "draft_results", "TopPlayers_2024_Projections_PPR.csv")
+    sim_id = os.environ.get("FFBENCH_SIM_ID")
+    if not sim_id:
+        latest_path = os.path.join(root, "data", "simulations", "latest_simulation_id.txt")
+        if os.path.exists(latest_path):
+            with open(latest_path) as f:
+                sim_id = f.read().strip()
+    search_paths = []
+    if sim_id:
+        search_paths.append(os.path.join(root, "data", "simulations", sim_id, "draft_results", "TopPlayers_2024_Projections_PPR.csv"))
+    search_paths.append(os.path.join(root, "data", "draft_results", "TopPlayers_2024_Projections_PPR.csv"))
+    path = next((p for p in search_paths if os.path.exists(p)), None)
     top_map = {"QB": [], "RB": [], "WR": [], "TE": []}  # list of (name, points)
     if not os.path.exists(path):
         return top_map
@@ -281,8 +353,18 @@ def draft_simulation():
 
     precomputed_top = load_top_players_csv()
 
-    # LLM call logging
-    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "draft_results")
+    # LLM call logging under simulation folder
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sim_id_env = os.environ.get("FFBENCH_SIM_ID")
+    if not sim_id_env:
+        latest_path = os.path.join(root, "data", "simulations", "latest_simulation_id.txt")
+        if os.path.exists(latest_path):
+            with open(latest_path) as f:
+                sim_id_env = f.read().strip()
+        else:
+            sim_id_env = f"simulation_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    sim_root = os.path.join(root, "data", "simulations", sim_id_env)
+    log_dir = os.path.join(sim_root, "draft_results")
     os.makedirs(log_dir, exist_ok=True)
     log_path = os.path.join(log_dir, f"llm_calls_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl")
     def log_llm_call(team_name, call_type, payload, response):
@@ -338,32 +420,26 @@ def draft_simulation():
                 "Return EXACTLY 5 player names you want to research next, comma-separated, using the names EXACTLY as shown above."
             )
 
-            # First call: request 5 candidate names (STRICT JSON)
-            first_prompt = (
-                team_info + "\n\n" +
+            # First call: request 5 candidate names (STRICT JSON, but parser accepts text or JSON)
+            first_prompt = team_info + "\n\n" + (
                 "Respond ONLY with a JSON object of the form {\"candidates\": [\"name1\", \"name2\", \"name3\", \"name4\", \"name5\"]}. "
                 "Choose EXACTLY 5 names from the suggested lists above. Do not include any extra text."
             )
-            first_resp_raw = llm.call_with_prompt(team["model"]["arn"], first_prompt)
+            first_resp_raw = llm.call_with_prompt(team["model"]["id"], first_prompt, response_format={"type":"json_object"})
             log_llm_call(team["name"], "request_candidates", {"prompt": first_prompt}, first_resp_raw)
 
             requested_names = []
             # Try strict JSON parse
-            if isinstance(first_resp_raw, str):
-                txt = first_resp_raw.strip()
-                if "{" in txt and "}" in txt:
-                    try:
-                        js = json.loads(txt[txt.find("{"): txt.rfind("}")+1])
-                        if isinstance(js, dict) and isinstance(js.get("candidates"), list):
-                            requested_names = [str(x).strip() for x in js["candidates"]][:5]
-                    except Exception:
-                        pass
-            elif isinstance(first_resp_raw, dict) and isinstance(first_resp_raw.get("candidates"), list):
+            if isinstance(first_resp_raw, dict) and isinstance(first_resp_raw.get("candidates"), list):
                 requested_names = [str(x).strip() for x in first_resp_raw["candidates"]][:5]
-            # Fallback naive split
+            elif isinstance(first_resp_raw, str):
+                js = _extract_json(first_resp_raw)
+                if isinstance(js, dict) and isinstance(js.get("candidates"), list):
+                    requested_names = [str(x).strip() for x in js["candidates"]][:5]
+            # Fallback parse from text
             if not requested_names and isinstance(first_resp_raw, str):
-                parts = [p.strip() for p in first_resp_raw.replace("\n", ",").split(",") if p.strip()]
-                requested_names = parts[:5]
+                parsed = _parse_candidates_from_text(first_resp_raw)
+                requested_names = parsed[:5]
             if not requested_names:
                 fallback = []
                 for pos in ("QB","RB","WR","TE"):
@@ -399,36 +475,47 @@ def draft_simulation():
             cand_lines = "\n".join([f"- {nm}: {summary}" for nm, summary in candidates])
             allowed_names_list = [nm for nm, _ in candidates]
             allowed_names = ", ".join(allowed_names_list)
+            second_rule = (f"Respond ONLY with a JSON object of the form {{\"pick\": \"<one name from: {allowed_names}>\"}}.")
             second_prompt = (
                 "You are drafting. Here are brief summaries for exactly 5 candidates.\n"
                 f"{cand_lines}\n\n"
-                f"Respond ONLY with a JSON object of the form {{\"pick\": \"<one name from: {allowed_names}>\"}}."
+                f"{second_rule}"
             )
-            second_resp_raw = llm.call_with_prompt(team["model"]["arn"], second_prompt)
+            second_resp_raw = llm.call_with_prompt(team["model"]["id"], second_prompt, response_format={"type":"json_object"})
             log_llm_call(team["name"], "final_pick", {"prompt": second_prompt}, second_resp_raw)
             pick_name = ""
-            if isinstance(second_resp_raw, str):
-                txt2 = second_resp_raw.strip()
-                if "{" in txt2 and "}" in txt2:
-                    try:
-                        js2 = json.loads(txt2[txt2.find("{"): txt2.rfind("}")+1])
-                        if isinstance(js2, dict) and isinstance(js2.get("pick"), str):
-                            pick_name = js2["pick"].strip()
-                    except Exception:
-                        pass
-                if not pick_name:
-                    pick_name = txt2
-            elif isinstance(second_resp_raw, dict) and isinstance(second_resp_raw.get("pick"), str):
+            if isinstance(second_resp_raw, dict) and isinstance(second_resp_raw.get("pick"), str):
                 pick_name = second_resp_raw["pick"].strip()
+            elif isinstance(second_resp_raw, str):
+                js2 = _extract_json(second_resp_raw)
+                if isinstance(js2, dict) and isinstance(js2.get("pick"), str):
+                    pick_name = js2["pick"].strip()
+                else:
+                    # fallback to parse from text
+                    pick_name = _parse_pick_from_text(second_resp_raw)
+
+            # Normalize pick to one of the candidate tokens if possible
+            if pick_name:
+                def _canon(s: str) -> str:
+                    return ''.join(ch for ch in s.lower() if ch.isalnum())
+                cand_map = { _canon(nm): nm for nm, _ in candidates }
+                pn = _canon(pick_name)
+                if pn in cand_map:
+                    pick_name = cand_map[pn]
 
             # Validate pick; fallback if invalid
             valid_names = {nm for nm, _ in candidates}
             if pick_name not in valid_names:
-                # fallback to best available that fits
-                for p in hidden_ranked:
-                    if p["Name"] not in drafted and can_add(team["picks"], p["Name"]):
-                        pick_name = p["Name"]
-                        break
+                # Try to accept any exact match in player pool if available and fits roster
+                pool_match = next((p for p in player_pool if p["Name"].lower() == pick_name.lower()), None)
+                if pool_match and pool_match["Name"] not in drafted and can_add(team["picks"], pool_match["Name"]):
+                    pick_name = pool_match["Name"]
+                else:
+                    # fallback to best available that fits
+                    for p in hidden_ranked:
+                        if p["Name"] not in drafted and can_add(team["picks"], p["Name"]):
+                            pick_name = p["Name"]
+                            break
 
             # Commit pick
             drafted.add(pick_name)
@@ -436,8 +523,8 @@ def draft_simulation():
             team["picks"].append(pick_player)
             print(f"Round {rnd+1} - {team['name']} drafted {pick_name} ({pick_player['Position']})")
 
-    # Save to CSV per team
-    out_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "draft_results")
+    # Save to CSV per team under simulation folder
+    out_dir = os.path.join(sim_root, "draft_results")
     os.makedirs(out_dir, exist_ok=True)
     for team in teams:
         # Include model nickname in filename
@@ -448,7 +535,7 @@ def draft_simulation():
             writer = csv.writer(f)
             writer.writerow(["Name", "Team", "Position", "FantasyPoints", "Model", "ModelName"])
             for p in team["picks"]:
-                writer.writerow([p["Name"], p["Team"], p["Position"], f"{p['FantasyPoints']:.2f}", team["model"]["arn"], team["model"]["name"]])
+                writer.writerow([p["Name"], p["Team"], p["Position"], f"{p['FantasyPoints']:.2f}", team["model"]["id"], team["model"]["name"]])
         print(f"Saved roster to {path}")
 
 
