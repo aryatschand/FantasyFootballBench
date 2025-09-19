@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model,ModelName
+Christian McCaffrey,SF,RB,47.80,qwen/qwen3-max,Qwen 3 Max
+Dak Prescott,DAL,QB,116.52,qwen/qwen3-max,Qwen 3 Max
+Sam LaPorta,DET,TE,174.60,qwen/qwen3-max,Qwen 3 Max
+Evan Engram,JAX,TE,87.50,qwen/qwen3-max,Qwen 3 Max
+James Cook,BUF,RB,266.70,qwen/qwen3-max,Qwen 3 Max
+Drake London,ATL,WR,280.80,qwen/qwen3-max,Qwen 3 Max
+Tua Tagovailoa,MIA,QB,177.58,qwen/qwen3-max,Qwen 3 Max
+Geno Smith,SEA,QB,266.00,qwen/qwen3-max,Qwen 3 Max
+Kyler Murray,ARI,QB,295.24,qwen/qwen3-max,Qwen 3 Max
+Derek Carr,NO,QB,148.90,qwen/qwen3-max,Qwen 3 Max
+Zack Moss,CIN,RB,81.90,qwen/qwen3-max,Qwen 3 Max
+Nick Chubb,CLE,RB,63.30,qwen/qwen3-max,Qwen 3 Max

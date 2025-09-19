@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Derrick Henry,BAL,RB,336.40,openai/gpt-oss-120b
+DK Metcalf,SEA,WR,191.20,openai/gpt-oss-120b
+James Cook,BUF,RB,266.70,openai/gpt-oss-120b
+David Njoku,CLE,TE,144.50,openai/gpt-oss-120b
+Najee Harris,PIT,RB,204.60,openai/gpt-oss-120b
+Tank Dell,HOU,WR,140.00,openai/gpt-oss-120b
+Tua Tagovailoa,MIA,QB,177.58,openai/gpt-oss-120b
+Austin Ekeler,WAS,RB,132.30,openai/gpt-oss-120b
+Nick Chubb,CLE,RB,63.30,openai/gpt-oss-120b
+Luke Musgrave,GB,TE,11.50,openai/gpt-oss-120b
+Jonathan Taylor,IND,RB,246.70,openai/gpt-oss-120b
+Tee Higgins,CIN,WR,222.10,openai/gpt-oss-120b

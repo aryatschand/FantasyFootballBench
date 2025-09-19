@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+A.J. Brown,PHI,WR,216.90,anthropic/claude-sonnet-4
+Jalen Hurts,PHI,QB,315.12,anthropic/claude-sonnet-4
+Kyren Williams,LAR,RB,272.10,anthropic/claude-sonnet-4
+DJ Moore,CHI,WR,236.10,anthropic/claude-sonnet-4
+Rachaad White,TB,RB,199.60,anthropic/claude-sonnet-4
+Devin Singletary,NYG,RB,96.60,anthropic/claude-sonnet-4
+Tyjae Spears,TEN,RB,113.60,anthropic/claude-sonnet-4
+Chuba Hubbard,CAR,RB,239.60,anthropic/claude-sonnet-4
+Dak Prescott,DAL,QB,116.52,anthropic/claude-sonnet-4
+Jordan Love,GB,QB,227.86,anthropic/claude-sonnet-4
+Travis Kelce,KC,TE,195.40,anthropic/claude-sonnet-4
+Josh Jacobs,GB,RB,293.10,anthropic/claude-sonnet-4

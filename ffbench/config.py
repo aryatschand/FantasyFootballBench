@@ -19,6 +19,8 @@ def get_config():
     # Basic validation
     if "num_teams" not in cfg or "models" not in cfg or "roster_slots" not in cfg or "scoring" not in cfg:
         raise ValueError("Config missing required keys: num_teams, models, roster_slots, scoring")
+    if "season_weeks" not in cfg or "trade_weeks" not in cfg:
+        raise ValueError("Config missing required keys: season_weeks, trade_weeks")
     return cfg
 
 
@@ -60,6 +62,14 @@ def get_model_ids():
 
 def get_num_teams():
     return int(get_config()["num_teams"])
+
+
+def get_season_weeks():
+    return int(get_config()["season_weeks"])
+
+
+def get_trade_weeks():
+    return get_config()["trade_weeks"]
 
 
 def format_roster_format():

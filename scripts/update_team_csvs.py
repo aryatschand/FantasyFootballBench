@@ -2,6 +2,10 @@
 import os
 import csv
 import shutil
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from ffbench.config import get_num_teams
 
 def update_team_csvs():
     # Model ARN used in the draft (from the logs)
@@ -9,7 +13,8 @@ def update_team_csvs():
 
     draft_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "draft_results")
 
-    for team_num in range(1, 11):
+    num_teams = get_num_teams()
+    for team_num in range(1, num_teams + 1):
         old_filename = f"Team_{team_num}_2024.csv"
         old_path = os.path.join(draft_dir, old_filename)
 

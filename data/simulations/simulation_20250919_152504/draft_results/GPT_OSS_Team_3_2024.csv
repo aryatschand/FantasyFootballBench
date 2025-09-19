@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Isiah Pacheco,KC,RB,56.90,anthropic/claude-opus-4.1
+Amari Cooper,BUF,WR,122.70,anthropic/claude-opus-4.1
+Jared Goff,DET,QB,322.46,anthropic/claude-opus-4.1
+Trevor Lawrence,JAX,QB,139.20,anthropic/claude-opus-4.1
+Terrell Jennings,NE,RB,3.30,anthropic/claude-opus-4.1
+Jerome Ford,CLE,RB,134.00,anthropic/claude-opus-4.1
+Anthony Richardson,IND,QB,161.36,anthropic/claude-opus-4.1
+Chris Godwin,TB,WR,137.80,anthropic/claude-opus-4.1
+Trey McBride,ARI,TE,249.80,anthropic/claude-opus-4.1
+Terry McLaurin,WAS,WR,267.80,anthropic/claude-opus-4.1
+Bijan Robinson,ATL,RB,339.70,anthropic/claude-opus-4.1
+Nico Collins,HOU,WR,210.60,anthropic/claude-opus-4.1

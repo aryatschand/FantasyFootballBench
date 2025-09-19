@@ -56,18 +56,34 @@ class OpenRouterLM(dspy.LM):
             if max_tokens < 20000:
                 max_tokens = 20000
 
-        completion = self.client.chat.completions.create(
-            model=self.model_id,
-            messages=[
-                {"role": "system", "content": system_content},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=temperature,
-            max_tokens=max_tokens,
-            extra_headers=extra_headers,
-            extra_body=extra_body,
-        )
-        text = (completion.choices[0].message.content or "").strip()
+        def _do_call(max_toks):
+            params = dict(
+                model=self.model_id,
+                messages=[
+                    {"role": "system", "content": system_content},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=temperature,
+                max_tokens=max_toks,
+                extra_headers=extra_headers,
+                extra_body=extra_body,
+            )
+            # If caller requested JSON mode, ask the API to enforce it when supported
+            if json_mode:
+                params["response_format"] = {"type": "json_object"}
+            return self.client.chat.completions.create(**params)
+
+        try:
+            completion = _do_call(max_tokens)
+        except Exception:
+            # One conservative retry with smaller output and without extras
+            try:
+                completion = _do_call(min(2048, max_tokens))
+            except Exception:
+                # As a last resort, return an empty JSON/text so upstream can fallback
+                return {} if json_mode else ""
+
+        text = ((completion.choices[0].message.content) or "").strip()
         if json_mode:
             try:
                 return json.loads(text)

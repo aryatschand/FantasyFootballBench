@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model,ModelName
+Tyreek Hill,MIA,WR,218.20,meta-llama/llama-4-maverick,Llama 4 Maverick
+Davante Adams,NYJ,WR,239.30,meta-llama/llama-4-maverick,Llama 4 Maverick
+Jayden Daniels,WAS,QB,349.82,meta-llama/llama-4-maverick,Llama 4 Maverick
+Josh Jacobs,GB,RB,293.10,meta-llama/llama-4-maverick,Llama 4 Maverick
+Trey McBride,ARI,TE,249.80,meta-llama/llama-4-maverick,Llama 4 Maverick
+De'Von Achane,MIA,RB,299.90,meta-llama/llama-4-maverick,Llama 4 Maverick
+D'Andre Swift,CHI,RB,212.50,meta-llama/llama-4-maverick,Llama 4 Maverick
+Justin Herbert,LAC,QB,279.40,meta-llama/llama-4-maverick,Llama 4 Maverick
+Brian Robinson Jr.,WAS,RB,159.80,meta-llama/llama-4-maverick,Llama 4 Maverick
+Aaron Rodgers,NYJ,QB,252.58,meta-llama/llama-4-maverick,Llama 4 Maverick
+Matthew Stafford,LAR,QB,214.58,meta-llama/llama-4-maverick,Llama 4 Maverick
+Ezekiel Elliott,DAL,RB,57.50,meta-llama/llama-4-maverick,Llama 4 Maverick

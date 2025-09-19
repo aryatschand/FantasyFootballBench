@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Amon-Ra St. Brown,DET,WR,316.18,anthropic/claude-sonnet-4
+Lamar Jackson,BAL,QB,428.38,anthropic/claude-sonnet-4
+Rachaad White,TB,RB,199.60,anthropic/claude-sonnet-4
+Stefon Diggs,HOU,WR,121.92,anthropic/claude-sonnet-4
+Amari Cooper,BUF,WR,122.70,anthropic/claude-sonnet-4
+Javonte Williams,DEN,RB,157.90,anthropic/claude-sonnet-4
+Raheem Mostert,MIA,RB,70.90,anthropic/claude-sonnet-4
+Austin Ekeler,WAS,RB,132.30,anthropic/claude-sonnet-4
+Diontae Johnson,HOU,WR,89.10,anthropic/claude-sonnet-4
+Dalton Schultz,HOU,TE,118.20,anthropic/claude-sonnet-4
+C.J. Stroud,HOU,QB,220.38,anthropic/claude-sonnet-4
+Saquon Barkley,PHI,RB,349.30,anthropic/claude-sonnet-4

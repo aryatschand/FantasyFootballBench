@@ -1,0 +1,13 @@
+Week,Team,Model,Opponent,Player,ResolvedName,Position,Points
+3,Qwen_3_Max_Team_2,meta-llama/llama-4-maverick,Kimi_K2_Team_1,C.J. Stroud,C.J. Stroud,QB,9.80
+3,Qwen_3_Max_Team_2,meta-llama/llama-4-maverick,Kimi_K2_Team_1,Derrick Henry,Derrick Henry,RB,30.40
+3,Kimi_K2_Team_1,qwen/qwen3-max,Qwen_3_Max_Team_2,Jalen Hurts,Jalen Hurts,QB,10.94
+3,Kimi_K2_Team_1,qwen/qwen3-max,Qwen_3_Max_Team_2,Saquon Barkley,Saquon Barkley,RB,31.60
+3,Qwen_3_Max_Team_2,meta-llama/llama-4-maverick,Kimi_K2_Team_1,TOTAL,,,40.20
+3,Kimi_K2_Team_1,qwen/qwen3-max,Qwen_3_Max_Team_2,TOTAL,,,42.54
+3,Llama_4_Maverick_Team_3,moonshotai/kimi-k2-0905,GPT_5_Mini_Team_4,Josh Allen,Josh Allen,QB,30.92
+3,Llama_4_Maverick_Team_3,moonshotai/kimi-k2-0905,GPT_5_Mini_Team_4,Christian McCaffrey,Christian McCaffrey,RB,0.00
+3,GPT_5_Mini_Team_4,openai/gpt-5-mini,Llama_4_Maverick_Team_3,Patrick Mahomes,Patrick Mahomes,QB,16.38
+3,GPT_5_Mini_Team_4,openai/gpt-5-mini,Llama_4_Maverick_Team_3,Bijan Robinson,Bijan Robinson,RB,13.20
+3,Llama_4_Maverick_Team_3,moonshotai/kimi-k2-0905,GPT_5_Mini_Team_4,TOTAL,,,30.92
+3,GPT_5_Mini_Team_4,openai/gpt-5-mini,Llama_4_Maverick_Team_3,TOTAL,,,29.58

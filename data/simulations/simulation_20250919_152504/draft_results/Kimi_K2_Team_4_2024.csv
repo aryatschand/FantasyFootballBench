@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Jaylen Waddle,MIA,WR,145.60,qwen/qwen3-max
+Mark Andrews,BAL,TE,188.80,qwen/qwen3-max
+Kenneth Walker III,SEA,RB,181.20,qwen/qwen3-max
+George Pickens,PIT,WR,164.40,qwen/qwen3-max
+Dallas Goedert,PHI,TE,103.60,qwen/qwen3-max
+Brian Robinson Jr.,WAS,RB,159.80,qwen/qwen3-max
+Jordan Addison,MIN,WR,212.50,qwen/qwen3-max
+Christian Watson,GB,WR,103.30,qwen/qwen3-max
+Marvin Harrison Jr.,ARI,WR,196.50,qwen/qwen3-max
+Patrick Mahomes,KC,QB,283.02,qwen/qwen3-max
+David Montgomery,DET,RB,221.72,qwen/qwen3-max
+T.Jones,ARI,RB,11.50,qwen/qwen3-max

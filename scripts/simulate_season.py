@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ffbench.data_handler import DataHandler
 from ffbench.scoring import calculate_fantasy_points
 from ffbench.llm import LLMManager
-from ffbench.config import get_scoring, get_roster_slots, get_models, format_roster_format, format_scoring_format
+from ffbench.config import get_scoring, get_roster_slots, get_models, format_roster_format, format_scoring_format, get_season_weeks, get_trade_weeks
 
 
 SCORING = get_scoring()
@@ -238,7 +238,7 @@ def write_team_csv(team):
             writer.writerow([p.get("Name"), p.get("Team"), p.get("Position"), f"{float(p.get('FantasyPoints', 0) or 0):.2f}", team.get("model_id", "")])
 
 
-def simulate_season():
+def simulate_season(start_week: int = 1):
     random.seed(42)
     dh = DataHandler()
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -290,7 +290,8 @@ def simulate_season():
             "ReceivingTouchdowns": 0.0,
         }
         found_any = False
-        for wk in range(1, 18):
+        season_weeks = get_season_weeks()
+        for wk in range(1, season_weeks + 1):
             dfw = dh_local.read_player_game_stats_by_week(year, wk)
             if dfw.empty:
                 continue
@@ -380,7 +381,10 @@ def simulate_season():
             f"{format_roster_format()}\n"
             f"{format_scoring_format()}\n\n"
             f"Team: {team['name']} | {team_record_string(team['name'])}\n"
-            "You are setting a fantasy football lineup. Roster configuration: 1 QB, 2 RB, 2 WR, 1 TE, 1 FLEX (RB/WR/TE).\n"
+            f"You are setting a fantasy football lineup. {format_roster_format()}\n"
+            "IMPORTANT: You are ONLY allowed to use the data explicitly provided in this prompt. "
+            "You cannot perform web searches, access external databases, or use any additional information not provided here. "
+            "All decisions must be based solely on the player stats and context given below.\n\n"
             "Respond ONLY with a JSON object of the form {\"qb\": \"Name\", \"rbs\": [\"Name\",\"Name\"], \"wrs\": [\"Name\",\"Name\"], \"te\": \"Name\", \"flex\": \"Name\"}. "
             f"All names MUST be selected from this list: {allowed_names}.\n\n" +
             "Players and stats context:\n" +
@@ -456,6 +460,9 @@ def simulate_season():
                 "Fantasy Football Trade Negotiation Setup:\n"
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
+                "IMPORTANT: You are ONLY allowed to use the data explicitly provided in this prompt. "
+                "You cannot perform web searches, access external databases, or use any additional information not provided here. "
+                "All decisions must be based solely on the team rosters, player stats, and context given below.\n\n"
                 "You are proposing a fantasy football trade.\n"+
                 f"Your team: {proposer['name']} ({team_record_string(proposer['name'])}) (weakest position heuristic: {weakest}).\n"+
                 "Your roster with stats:\n" + "\n".join(proposer_lines) + "\n\n"+
@@ -468,13 +475,20 @@ def simulate_season():
             log_trade_call("propose", proposer, others[0] if others else proposer, week, resp1)
             try:
                 js1 = _extract_json(resp1) if isinstance(resp1, str) else resp1
+                if isinstance(js1, list) and js1:
+                    js1 = js1[0]
                 if not js1 and isinstance(resp1, str):
                     js1 = _parse_trade_proposal(resp1)
             except Exception:
                 js1 = {}
-            target_name = (js1 or {}).get("target_team")
-            give = (js1 or {}).get("give", [])
-            receive = (js1 or {}).get("receive", [])
+            # Normalize js1 to dict
+            if isinstance(js1, list) and js1:
+                js1 = js1[0]
+            if not isinstance(js1, dict):
+                js1 = {}
+            target_name = js1.get("target_team")
+            give = js1.get("give", [])
+            receive = js1.get("receive", [])
             # Support give/receive as list of dicts with name/position
             def extract_names(items):
                 res = []
@@ -507,6 +521,9 @@ def simulate_season():
                 "Fantasy Football Trade Negotiation Setup:\n"
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
+                "IMPORTANT: You are ONLY allowed to use the data explicitly provided in this prompt. "
+                "You cannot perform web searches, access external databases, or use any additional information not provided here. "
+                "All decisions must be based solely on the team rosters, player stats, and trade proposal given below.\n\n"
                 f"You are the receiver of a trade proposal. Your team: {target['name']} ({team_record_string(target['name'])}).\n"+
                 f"Proposal: you would RECEIVE {receive_names} and GIVE {give_names}. Rationale from proposer: {(js1 or {}).get('rationale','')}\n"+
                 "Proposer roster with stats:\n" + context_prop + "\n\nReceiver roster with stats:\n" + context_recv + "\n\n"+
@@ -517,10 +534,16 @@ def simulate_season():
             log_trade_call("counter_or_accept", proposer, target, week, resp2)
             try:
                 js2 = _extract_json(resp2) if isinstance(resp2, str) else resp2
+                if isinstance(js2, list) and js2:
+                    js2 = js2[0]
                 if not js2 and isinstance(resp2, str):
                     js2 = _parse_trade_decision(resp2)
             except Exception:
                 js2 = {"decision": "counter", "give": [{"name": receive_names[0] if receive_names else target["roster"][0]["Name"], "position": ""}], "receive": [{"name": give_names[0] if give_names else proposer["roster"][0]["Name"], "position": ""}], "rationale": "Auto-counter due to unparseable response."}
+            if isinstance(js2, list) and js2:
+                js2 = js2[0]
+            if not isinstance(js2, dict):
+                js2 = {"decision": "reject"}
             if (js2 or {}).get("decision") == "accept" and give_names and receive_names and len(give_names) == len(receive_names):
                 apply_trade(proposer, target, give_names, receive_names)
                 write_team_csv(proposer); write_team_csv(target)
@@ -542,6 +565,9 @@ def simulate_season():
                 "Fantasy Football Trade Negotiation Setup:\n"
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
+                "IMPORTANT: You are ONLY allowed to use the data explicitly provided in this prompt. "
+                "You cannot perform web searches, access external databases, or use any additional information not provided here. "
+                "All decisions must be based solely on the team rosters, player stats, and counter proposal given below.\n\n"
                 f"You are the original proposer evaluating a counter. Your team: {proposer['name']} ({team_record_string(proposer['name'])}).\n"+
                 f"Counter proposal: YOU would GIVE {receive2} and RECEIVE {give2}. Rationale from other team: {(js2 or {}).get('rationale','')}\n"+
                 "If the counter clearly benefits your team, choose accept. If not, respond with ONE final COUNTER of EXACTLY equal size (1-for-1, 2-for-2, or 3-for-3). NEVER propose an uneven trade.\n"
@@ -551,9 +577,15 @@ def simulate_season():
             log_trade_call("proposer_react", proposer, target, week, resp3)
             try:
                 js3 = _extract_json(resp3) if isinstance(resp3, str) else resp3
+                if isinstance(js3, list) and js3:
+                    js3 = js3[0]
                 if not js3 and isinstance(resp3, str):
                     js3 = _parse_trade_decision(resp3)
             except Exception:
+                js3 = {"decision": "reject"}
+            if isinstance(js3, list) and js3:
+                js3 = js3[0]
+            if not isinstance(js3, dict):
                 js3 = {"decision": "reject"}
             if (js3 or {}).get("decision") == "accept" and give2 and receive2 and len(give2) == len(receive2):
                 apply_trade(target, proposer, give2, receive2)
@@ -573,6 +605,9 @@ def simulate_season():
                 "Fantasy Football Trade Negotiation Setup:\n"
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
+                "IMPORTANT: You are ONLY allowed to use the data explicitly provided in this prompt. "
+                "You cannot perform web searches, access external databases, or use any additional information not provided here. "
+                "All decisions must be based solely on the team rosters, player stats, and final counter given below.\n\n"
                 f"Final decision. Evaluate this final counter. Your team: {target['name']} ({team_record_string(target['name'])}).\n"+
                 f"Final counter: you would GIVE {give3} and RECEIVE {receive3}.\n"+
                 "If this improves your team, choose accept; otherwise reject. NEVER accept or propose uneven trades.\n"
@@ -582,9 +617,15 @@ def simulate_season():
             log_trade_call("final_decision", proposer, target, week, resp4)
             try:
                 js4 = _extract_json(resp4) if isinstance(resp4, str) else resp4
+                if isinstance(js4, list) and js4:
+                    js4 = js4[0]
                 if not js4 and isinstance(resp4, str):
                     js4 = _parse_trade_decision(resp4)
             except Exception:
+                js4 = {"decision": "reject"}
+            if isinstance(js4, list) and js4:
+                js4 = js4[0]
+            if not isinstance(js4, dict):
                 js4 = {"decision": "reject"}
             if (js4 or {}).get("decision") == "accept" and give3 and receive3 and len(give3) == len(receive3):
                 apply_trade(proposer, target, give3, receive3)
@@ -677,9 +718,11 @@ def simulate_season():
         bench = [p for p in team["roster"] if p["Name"] not in used]
         return starters, bench
 
-    for week in range(1, 18):
-        # Trades only every 3 weeks: 1,4,7,...
-        if (week - 1) % 3 == 0:
+    season_weeks = get_season_weeks()
+    for week in range(start_week, season_weeks + 1):
+        # Trades only on specified weeks from config
+        trade_weeks = get_trade_weeks()
+        if week in trade_weeks:
             propose_and_negotiate_trades(teams, week)
         # Random matchups
         idxs = list(range(len(teams)))
@@ -795,6 +838,10 @@ def simulate_season():
 
 
 if __name__ == "__main__":
-    simulate_season()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start-week", type=int, default=1)
+    args = parser.parse_args()
+    simulate_season(start_week=args.start_week)
 
 

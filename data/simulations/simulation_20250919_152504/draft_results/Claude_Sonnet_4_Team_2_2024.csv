@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Christian McCaffrey,SF,RB,47.80,openai/gpt-5-mini
+Davante Adams,NYJ,WR,239.30,openai/gpt-5-mini
+Travis Etienne Jr.,JAX,RB,130.20,openai/gpt-5-mini
+Brandon Aiyuk,SF,WR,62.40,openai/gpt-5-mini
+Joe Burrow,CIN,QB,372.82,openai/gpt-5-mini
+Keenan Allen,CHI,WR,184.40,openai/gpt-5-mini
+Raheem Mostert,MIA,RB,70.90,openai/gpt-5-mini
+Jaxon Smith-Njigba,SEA,WR,253.00,openai/gpt-5-mini
+Brock Bowers,LV,TE,262.70,openai/gpt-5-mini
+Jerry Jeudy,CLE,WR,236.90,openai/gpt-5-mini
+Baker Mayfield,TB,QB,363.80,openai/gpt-5-mini
+DeAndre Hopkins,KC,WR,147.00,openai/gpt-5-mini
