@@ -16,6 +16,82 @@ from ffbench.config import get_scoring, get_roster_slots, get_models, format_ros
 
 
 SCORING = get_scoring()
+def _strip_code_fences(text: str):
+    s = text.strip()
+    if s.startswith("```"):
+        s = s.split("\n", 1)[-1]
+        if s.endswith("```"):
+            s = s.rsplit("\n", 1)[0]
+    return s.strip()
+
+def _extract_json(text: str):
+    import json as _json
+    s = _strip_code_fences(text)
+    try:
+        return _json.loads(s)
+    except Exception:
+        pass
+    start = s.find('{'); end = s.rfind('}')
+    if start != -1 and end != -1 and end > start:
+        try:
+            return _json.loads(s[start:end+1])
+        except Exception:
+            pass
+    start = s.find('['); end = s.rfind(']')
+    if start != -1 and end != -1 and end > start:
+        try:
+            return _json.loads(s[start:end+1])
+        except Exception:
+            pass
+    return None
+
+def _parse_trade_proposal(text: str):
+    import re
+    text = _strip_code_fences(text)
+    # Extract target_team
+    target_match = re.search(r'"target_team"\s*:\s*"([^"]+)"', text, re.IGNORECASE)
+    target_team = target_match.group(1).strip() if target_match else None
+    # Extract give: list of names
+    give_match = re.search(r'"give"\s*:\s*\[([^\]]*)\]', text, re.IGNORECASE | re.DOTALL)
+    give_names = []
+    if give_match:
+        names = re.findall(r'"name"\s*:\s*"([^"]+)"', give_match.group(1), re.IGNORECASE)
+        give_names = [n.strip() for n in names]
+    # Extract receive
+    receive_match = re.search(r'"receive"\s*:\s*\[([^\]]*)\]', text, re.IGNORECASE | re.DOTALL)
+    receive_names = []
+    if receive_match:
+        names = re.findall(r'"name"\s*:\s*"([^"]+)"', receive_match.group(1), re.IGNORECASE)
+        receive_names = [n.strip() for n in names]
+    # Extract rationale
+    rationale_match = re.search(r'"rationale"\s*:\s*"([^"]*)"', text, re.IGNORECASE | re.DOTALL)
+    rationale = rationale_match.group(1).strip() if rationale_match else ""
+    return {"target_team": target_team, "give": give_names, "receive": receive_names, "rationale": rationale}
+
+def _parse_trade_decision(text: str):
+    import re
+    text = _strip_code_fences(text)
+    # Extract decision
+    decision_match = re.search(r'"decision"\s*:\s*"([^"]+)"', text, re.IGNORECASE)
+    decision = decision_match.group(1).strip().lower() if decision_match else "counter"
+    result = {"decision": decision}
+    if decision == "counter":
+        # Extract give and receive like above
+        give_match = re.search(r'"give"\s*:\s*\[([^\]]*)\]', text, re.IGNORECASE | re.DOTALL)
+        give_names = []
+        if give_match:
+            names = re.findall(r'"name"\s*:\s*"([^"]+)"', give_match.group(1), re.IGNORECASE)
+            give_names = [n.strip() for n in names]
+        receive_match = re.search(r'"receive"\s*:\s*\[([^\]]*)\]', text, re.IGNORECASE | re.DOTALL)
+        receive_names = []
+        if receive_match:
+            names = re.findall(r'"name"\s*:\s*"([^"]+)"', receive_match.group(1), re.IGNORECASE)
+            receive_names = [n.strip() for n in names]
+        rationale_match = re.search(r'"rationale"\s*:\s*"([^"]*)"', text, re.IGNORECASE | re.DOTALL)
+        rationale = rationale_match.group(1).strip() if rationale_match else ""
+        result.update({"give": give_names, "receive": receive_names, "rationale": rationale})
+    return result
+
 
 
 def normalize_stat_keys(row):
@@ -165,18 +241,27 @@ def write_team_csv(team):
 def simulate_season():
     random.seed(42)
     dh = DataHandler()
-    draft_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "draft_results")
-    out_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "season_results")
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sim_id = os.environ.get("FFBENCH_SIM_ID")
+    if not sim_id:
+        latest_path = os.path.join(root, "data", "simulations", "latest_simulation_id.txt")
+        if os.path.exists(latest_path):
+            with open(latest_path) as f:
+                sim_id = f.read().strip()
+    if not sim_id:
+        sim_id = f"simulation_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    sim_root = os.path.join(root, "data", "simulations", sim_id)
+    draft_dir = os.path.join(sim_root, "draft_results")
+    out_dir = os.path.join(sim_root, "season_results")
     os.makedirs(out_dir, exist_ok=True)
 
     teams = load_teams_from_draft(draft_dir)
-    # Attach models to teams; include model name in team name for tracking
+    # Attach models to teams; keep team names as created during draft
     models = get_models()
     for i, t in enumerate(teams):
         model = models[i % len(models)]
-        t["model_id"] = model["arn"]
+        t["model_id"] = model["id"]
         t["model_name"] = model["name"]
-        t["name"] = f"{t['name']}__{model['name']}"
     # Initial default lineups (used if LLM fails)
     for t in teams:
         starters, bench = select_starting_lineup(t["roster"])
@@ -265,6 +350,10 @@ def simulate_season():
             }))
         return weeks
 
+    def team_record_string(team_name):
+        rec = standings.get(team_name, {"wins":0,"losses":0,"ties":0})
+        return f"Record: {rec['wins']}-{rec['losses']}-{rec['ties']}"
+
     def build_lineup_prompt(team, week):
         # Build per-player payload with 2023 totals, 2024 YTD up to week-1, and last 3 weeks
         ytd_week = max(0, week - 1)
@@ -290,6 +379,7 @@ def simulate_season():
             "Fantasy Football Start/Sit Decision Setup:\n"
             f"{format_roster_format()}\n"
             f"{format_scoring_format()}\n\n"
+            f"Team: {team['name']} | {team_record_string(team['name'])}\n"
             "You are setting a fantasy football lineup. Roster configuration: 1 QB, 2 RB, 2 WR, 1 TE, 1 FLEX (RB/WR/TE).\n"
             "Respond ONLY with a JSON object of the form {\"qb\": \"Name\", \"rbs\": [\"Name\",\"Name\"], \"wrs\": [\"Name\",\"Name\"], \"te\": \"Name\", \"flex\": \"Name\"}. "
             f"All names MUST be selected from this list: {allowed_names}.\n\n" +
@@ -304,7 +394,7 @@ def simulate_season():
         return None  # computed inline per call
 
     # Trade logging setup
-    trade_log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "season_results")
+    trade_log_dir = out_dir
     os.makedirs(trade_log_dir, exist_ok=True)
     trade_log_path = os.path.join(trade_log_dir, f"llm_calls_trades_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl")
     def log_trade_call(stage, proposer_team, receiver_team, week_num, response):
@@ -367,9 +457,9 @@ def simulate_season():
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
                 "You are proposing a fantasy football trade.\n"+
-                f"Your team: {proposer['name']} (weakest position heuristic: {weakest}).\n"+
+                f"Your team: {proposer['name']} ({team_record_string(proposer['name'])}) (weakest position heuristic: {weakest}).\n"+
                 "Your roster with stats:\n" + "\n".join(proposer_lines) + "\n\n"+
-                "Other teams and their rosters with stats:\n\n" + "\n\n".join(other_blocks) + "\n\n"+
+                "Other teams and their rosters with stats (records shown in headers):\n\n" + "\n\n".join([f"Team {t['name']} ({team_record_string(t['name'])}) roster:\n" + "\n".join([summarize_player_for_trade(p['Name'], p['Position'], week) for p in t['roster']]) for t in others]) + "\n\n"+
                 "Propose ONE trade with EXACTLY equal number of players on both sides (choose 1-for-1, 2-for-2, or 3-for-3). Prefer 2-for-2 if both teams have depth; only use 1-for-1 if you cannot form a fair 2-for-2. NEVER propose an uneven trade (e.g., 2-for-1 or 3-for-2). "
                 "Include positions and a convincing rationale for the other team. "
                 "Return ONLY JSON: {\"target_team\": \"TeamName\", \"give\": [{\"name\": \"Full Name\", \"position\": \"POS\"}, ...], \"receive\": [{\"name\": \"Full Name\", \"position\": \"POS\"}, ...], \"rationale\": \"why this helps them\"}."
@@ -377,7 +467,9 @@ def simulate_season():
             resp1 = llm.call_with_prompt(proposer["model_id"], prompt1)
             log_trade_call("propose", proposer, others[0] if others else proposer, week, resp1)
             try:
-                js1 = json.loads(resp1[resp1.find("{"): resp1.rfind("}")+1]) if isinstance(resp1, str) else resp1
+                js1 = _extract_json(resp1) if isinstance(resp1, str) else resp1
+                if not js1 and isinstance(resp1, str):
+                    js1 = _parse_trade_proposal(resp1)
             except Exception:
                 js1 = {}
             target_name = (js1 or {}).get("target_team")
@@ -415,7 +507,7 @@ def simulate_season():
                 "Fantasy Football Trade Negotiation Setup:\n"
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
-                "You are the receiver of a trade proposal.\n"+
+                f"You are the receiver of a trade proposal. Your team: {target['name']} ({team_record_string(target['name'])}).\n"+
                 f"Proposal: you would RECEIVE {receive_names} and GIVE {give_names}. Rationale from proposer: {(js1 or {}).get('rationale','')}\n"+
                 "Proposer roster with stats:\n" + context_prop + "\n\nReceiver roster with stats:\n" + context_recv + "\n\n"+
                 "If the proposal clearly benefits your team (improves starters, depth, or expected points), choose accept. If not, respond with a COUNTER of EXACTLY equal size (1-for-1, 2-for-2, or 3-for-3). NEVER propose an uneven trade (e.g., 2-for-1).\n"
@@ -424,7 +516,9 @@ def simulate_season():
             resp2 = llm.call_with_prompt(target["model_id"], prompt2)
             log_trade_call("counter_or_accept", proposer, target, week, resp2)
             try:
-                js2 = json.loads(resp2[resp2.find("{"): resp2.rfind("}")+1]) if isinstance(resp2, str) else resp2
+                js2 = _extract_json(resp2) if isinstance(resp2, str) else resp2
+                if not js2 and isinstance(resp2, str):
+                    js2 = _parse_trade_decision(resp2)
             except Exception:
                 js2 = {"decision": "counter", "give": [{"name": receive_names[0] if receive_names else target["roster"][0]["Name"], "position": ""}], "receive": [{"name": give_names[0] if give_names else proposer["roster"][0]["Name"], "position": ""}], "rationale": "Auto-counter due to unparseable response."}
             if (js2 or {}).get("decision") == "accept" and give_names and receive_names and len(give_names) == len(receive_names):
@@ -448,7 +542,7 @@ def simulate_season():
                 "Fantasy Football Trade Negotiation Setup:\n"
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
-                "You are the original proposer evaluating a counter.\n"+
+                f"You are the original proposer evaluating a counter. Your team: {proposer['name']} ({team_record_string(proposer['name'])}).\n"+
                 f"Counter proposal: YOU would GIVE {receive2} and RECEIVE {give2}. Rationale from other team: {(js2 or {}).get('rationale','')}\n"+
                 "If the counter clearly benefits your team, choose accept. If not, respond with ONE final COUNTER of EXACTLY equal size (1-for-1, 2-for-2, or 3-for-3). NEVER propose an uneven trade.\n"
                 "Respond ONLY JSON. Either accept: {\"decision\": \"accept\"} OR counter once more: {\"decision\": \"counter\", \"give\": [{\"name\":\"...\",\"position\":\"...\"}], \"receive\": [{\"name\":\"...\",\"position\":\"...\"}], \"rationale\": \"...\"}."
@@ -456,7 +550,9 @@ def simulate_season():
             resp3 = llm.call_with_prompt(proposer["model_id"], prompt3)
             log_trade_call("proposer_react", proposer, target, week, resp3)
             try:
-                js3 = json.loads(resp3[resp3.find("{"): resp3.rfind("}")+1]) if isinstance(resp3, str) else resp3
+                js3 = _extract_json(resp3) if isinstance(resp3, str) else resp3
+                if not js3 and isinstance(resp3, str):
+                    js3 = _parse_trade_decision(resp3)
             except Exception:
                 js3 = {"decision": "reject"}
             if (js3 or {}).get("decision") == "accept" and give2 and receive2 and len(give2) == len(receive2):
@@ -477,7 +573,7 @@ def simulate_season():
                 "Fantasy Football Trade Negotiation Setup:\n"
                 f"{format_roster_format()}\n"
                 f"{format_scoring_format()}\n\n"
-                "Final decision. Evaluate this final counter.\n"+
+                f"Final decision. Evaluate this final counter. Your team: {target['name']} ({team_record_string(target['name'])}).\n"+
                 f"Final counter: you would GIVE {give3} and RECEIVE {receive3}.\n"+
                 "If this improves your team, choose accept; otherwise reject. NEVER accept or propose uneven trades.\n"
                 "Respond ONLY JSON. Either {\"decision\": \"accept\"} or {\"decision\": \"reject\"}."
@@ -485,7 +581,9 @@ def simulate_season():
             resp4 = llm.call_with_prompt(target["model_id"], prompt4)
             log_trade_call("final_decision", proposer, target, week, resp4)
             try:
-                js4 = json.loads(resp4[resp4.find("{"): resp4.rfind("}")+1]) if isinstance(resp4, str) else resp4
+                js4 = _extract_json(resp4) if isinstance(resp4, str) else resp4
+                if not js4 and isinstance(resp4, str):
+                    js4 = _parse_trade_decision(resp4)
             except Exception:
                 js4 = {"decision": "reject"}
             if (js4 or {}).get("decision") == "accept" and give3 and receive3 and len(give3) == len(receive3):
@@ -494,7 +592,7 @@ def simulate_season():
                 log_accepted_trade(week, proposer, target, give3, receive3, "final_decision")
 
     # LLM logging setup
-    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "season_results")
+    log_dir = out_dir
     os.makedirs(log_dir, exist_ok=True)
     log_path = os.path.join(log_dir, f"llm_calls_season_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl")
 
@@ -518,13 +616,10 @@ def simulate_season():
         log_llm_call(team["name"], team["model_id"], week, {"prompt": prompt}, resp)
         # Try to parse JSON
         parsed = None
-        if isinstance(resp, str) and "{" in resp and "}" in resp:
-            try:
-                parsed = json.loads(resp[resp.find("{"): resp.rfind("}")+1])
-            except Exception:
-                parsed = None
-        elif isinstance(resp, dict):
+        if isinstance(resp, dict):
             parsed = resp
+        elif isinstance(resp, str):
+            parsed = _extract_json(resp)
 
         names_by_slot = {"qb": None, "rbs": [], "wrs": [], "te": None, "flex": None}
         if isinstance(parsed, dict):
@@ -583,8 +678,9 @@ def simulate_season():
         return starters, bench
 
     for week in range(1, 18):
-        # Trades before lineups
-        propose_and_negotiate_trades(teams, week)
+        # Trades only every 3 weeks: 1,4,7,...
+        if (week - 1) % 3 == 0:
+            propose_and_negotiate_trades(teams, week)
         # Random matchups
         idxs = list(range(len(teams)))
         random.shuffle(idxs)

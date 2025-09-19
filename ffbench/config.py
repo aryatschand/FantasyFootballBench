@@ -38,13 +38,15 @@ def get_models():
     n = int(cfg["num_teams"])
     if not raw:
         raise ValueError("Config models list is empty")
-    # Normalize to list of {arn, name}
+    # Normalize to list of {id, name}
     models = []
     for item in raw:
         if isinstance(item, str):
-            models.append({"arn": item, "name": item.split(":")[-1]})
-        elif isinstance(item, dict) and item.get("arn"):
-            models.append({"arn": item["arn"], "name": item.get("name", item["arn"].split(":")[-1])})
+            models.append({"id": item, "name": item})
+        elif isinstance(item, dict):
+            mid = item.get("id") or item.get("arn")
+            if mid:
+                models.append({"id": mid, "name": item.get("name", mid)})
     # Repeat to match team count
     if len(models) < n:
         times = (n + len(models) - 1) // len(models)
@@ -52,8 +54,8 @@ def get_models():
     return models[:n]
 
 
-def get_model_arns():
-    return [m["arn"] for m in get_models()]
+def get_model_ids():
+    return [m["id"] for m in get_models()]
 
 
 def get_num_teams():

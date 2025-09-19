@@ -1,24 +1,24 @@
 {
   "num_teams": 10,
   "models": [
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0", "name": "Claude 3.5 Sonnet" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0", "name": "Meta Llama 3.1 405B A" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-405b-instruct-v1:0", "name": "Meta Llama 3.1 405B" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0", "name": "Claude Sonnet 4" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-opus-4-1-20250805-v1:0", "name": "Claude Opus 4.1" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-3-70b-instruct-v1:0", "name": "Meta Llama 3.3 70B" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.meta.llama3-1-70b-instruct-v1:0", "name": "Meta Llama 3.1 70B" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0", "name": "Claude 3.5 Sonnet C" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0", "name": "Claude 3.5 Sonnet B" },
-    { "arn": "arn:aws:bedrock:us-east-2:851725383897:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0", "name": "Claude Sonnet 4 B" }
+    { "id": "openai/gpt-5", "name": "GPT 5" },
+    { "id": "openai/gpt-5-mini", "name": "GPT 5 Mini" },
+    { "id": "openai/gpt-oss-120b", "name": "GPT OSS" },
+    { "id": "anthropic/claude-sonnet-4", "name": "Claude Sonnet 4" },
+    { "id": "anthropic/claude-opus-4.1", "name": "Claude Opus 4.1" },
+    { "id": "google/gemini-2.5-pro", "name": "Gemini 2.5 Pro" },
+    { "id": "google/gemini-2.5-flash", "name": "Gemini 2.5 Flash" },
+    { "id": "qwen/qwen3-max", "name": "Qwen 3 Max" },
+    { "id": "moonshotai/kimi-k2-0905", "name": "Kimi K2" },
+    { "id": "meta-llama/llama-4-maverick", "name": "Llama 4 Maverick" }
   ],
   "roster_slots": [
     { "slot": "QB", "count": 1 },
-    { "slot": "RB", "count": 2 },
-    { "slot": "WR", "count": 2 },
-    { "slot": "TE", "count": 1 },
-    { "slot": "FLEX", "count": 1 },
-    { "slot": "BENCH", "count": 5 }
+    { "slot": "RB", "count": 0 },
+    { "slot": "WR", "count": 0 },
+    { "slot": "TE", "count": 0 },
+    { "slot": "FLEX", "count": 0 },
+    { "slot": "BENCH", "count": 0 }
   ],
   "scoring": {
     "passing_yards": 0.04,

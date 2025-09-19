@@ -2,6 +2,7 @@
 import os
 import sys
 import csv
+from datetime import datetime
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -80,8 +81,16 @@ def export_top_players_2024():
 
     rows.sort(key=lambda r: r["FantasyPoints"], reverse=True)
 
-    out_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "draft_results")
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sim_id = os.environ.get("FFBENCH_SIM_ID") or f"simulation_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    sim_root = os.path.join(root, "data", "simulations", sim_id)
+    out_dir = os.path.join(sim_root, "draft_results")
     os.makedirs(out_dir, exist_ok=True)
+    # persist latest id for downstream scripts
+    meta_dir = os.path.join(root, "data", "simulations")
+    os.makedirs(meta_dir, exist_ok=True)
+    with open(os.path.join(meta_dir, "latest_simulation_id.txt"), "w") as fmeta:
+        fmeta.write(sim_id)
     out_path = os.path.join(out_dir, "TopPlayers_2024_Projections_PPR.csv")
 
     with open(out_path, "w", newline="") as f:
