@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Garrett Wilson,NYJ,WR,249.90,meta-llama/llama-4-maverick
+Isiah Pacheco,KC,RB,56.90,meta-llama/llama-4-maverick
+Joe Mixon,HOU,RB,240.50,meta-llama/llama-4-maverick
+Brandon Aiyuk,SF,WR,62.40,meta-llama/llama-4-maverick
+Stefon Diggs,HOU,WR,121.92,meta-llama/llama-4-maverick
+Calvin Ridley,TEN,WR,199.20,meta-llama/llama-4-maverick
+DeAndre Hopkins,KC,WR,147.00,meta-llama/llama-4-maverick
+Javonte Williams,DEN,RB,157.90,meta-llama/llama-4-maverick
+Tua Tagovailoa,MIA,QB,177.58,meta-llama/llama-4-maverick
+Juwan Johnson,NO,TE,122.80,meta-llama/llama-4-maverick
+Chris Godwin,TB,WR,137.80,meta-llama/llama-4-maverick
+Raheem Mostert,MIA,RB,70.90,meta-llama/llama-4-maverick

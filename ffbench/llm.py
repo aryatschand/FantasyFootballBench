@@ -2,6 +2,8 @@ import os
 import json
 import dspy
 from openai import OpenAI
+from ffbench.scoring import calculate_fantasy_points
+from ffbench.core import Player
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
@@ -125,6 +127,103 @@ class LLMManager:
         merged = {**kwargs, **overrides}
         return lm(prompt=prompt, **merged)
 
+    def choose_starters(self, team, week, opponents_map, weekly_stats):
+        """
+        Build a start/sit prompt for the team's roster, flagging any players who
+        will score exactly 0 points this week as INJURED in the prompt to discourage selection.
+        Returns: list[Player] starters for this week (QB, 2 RB, 2 WR, TE, FLEX)
+        """
+        # Compute this week's fantasy points for each roster player
+        pid_to_pts = {}
+        for p in team.roster:
+            rows = weekly_stats[weekly_stats.get("player_id") == p.player_id] if hasattr(weekly_stats, "get") else weekly_stats[weekly_stats["player_id"] == p.player_id]
+            if not rows.empty:
+                pid_to_pts[p.player_id] = float(calculate_fantasy_points(rows.iloc[0]))
+            else:
+                pid_to_pts[p.player_id] = 0.0
+
+        # Build allowed names and annotated roster lines
+        allowed_names = []
+        annotated_lines = []
+        for p in team.roster:
+            pts = pid_to_pts.get(p.player_id, 0.0)
+            note = " [INJURED - 0 pts this week]" if abs(pts) < 1e-9 else ""
+            annotated_lines.append(f"- {p.name} ({p.position}){note}")
+            allowed_names.append(p.name)
+
+        opponent_name = list(opponents_map.values())[0] if opponents_map else "Unknown"
+        team_info = (
+            f"Start/Sit Decision\n"
+            f"Week: {week}\n"
+            f"Manager: {team.manager_name}\n"
+            f"Opponent: {opponent_name}\n"
+            f"Roster (players flagged as 'INJURED - 0 pts this week' should generally not be started):\n" +
+            "\n".join(annotated_lines) +
+            "\n\n" +
+            "IMPORTANT: You are ONLY allowed to use the data explicitly provided in this prompt. "
+            "Respond ONLY with a JSON object of the form {\"qb\": \"Name\", \"rbs\": [\"Name\",\"Name\"], "
+            "\"wrs\": [\"Name\",\"Name\"], \"te\": \"Name\", \"flex\": \"Name\"}. "
+            "All names MUST be selected from this list: " + ", ".join(allowed_names) + "."
+        )
+
+        # Ask the model for starters
+        model_id = getattr(team.llm_manager, "model_id", None) or os.getenv("FFBENCH_STARTSIT_MODEL", "openai/gpt-5-mini")
+        resp = self.call_with_prompt(model_id, team_info, response_format={"type": "json_object"})
+
+        def build_best_lineup():
+            # Deterministic fallback by weekly points
+            players = list(team.roster)
+            players_sorted = sorted(players, key=lambda x: pid_to_pts.get(x.player_id, 0.0), reverse=True)
+            choose = []
+            # QB
+            qb = next((p for p in players_sorted if p.position == "QB"), None)
+            if qb:
+                choose.append(qb)
+            # RB x2
+            rbs = [p for p in players_sorted if p.position == "RB" and p not in choose][:2]
+            choose.extend(rbs)
+            # WR x2
+            wrs = [p for p in players_sorted if p.position == "WR" and p not in choose][:2]
+            choose.extend(wrs)
+            # TE
+            te = next((p for p in players_sorted if p.position == "TE" and p not in choose), None)
+            if te:
+                choose.append(te)
+            # FLEX (best of RB/WR/TE not chosen yet)
+            flex = next((p for p in players_sorted if p.position in ("RB","WR","TE") and p not in choose), None)
+            if flex:
+                choose.append(flex)
+            return choose
+
+        starters = []
+        try:
+            qb_name = (resp or {}).get("qb")
+            rbs_names = (resp or {}).get("rbs", [])
+            wrs_names = (resp or {}).get("wrs", [])
+            te_name = (resp or {}).get("te")
+            flex_name = (resp or {}).get("flex")
+            pick_names = []
+            if qb_name: pick_names.append(qb_name)
+            pick_names.extend(rbs_names[:2])
+            pick_names.extend(wrs_names[:2])
+            if te_name: pick_names.append(te_name)
+            if flex_name: pick_names.append(flex_name)
+            # Map names back to Player objects
+            name_to_player = {p.name: p for p in team.roster}
+            for nm in pick_names:
+                if nm in name_to_player:
+                    starters.append(name_to_player[nm])
+            # If incomplete, fill by best lineup
+            if len(starters) < 7:
+                fallback = build_best_lineup()
+                for p in fallback:
+                    if p not in starters and len(starters) < 7:
+                        starters.append(p)
+        except Exception:
+            starters = build_best_lineup()
+            
+        return starters
+    
 
 class DraftPickSignature(dspy.Signature):
     team_info = dspy.InputField(desc="Team context")

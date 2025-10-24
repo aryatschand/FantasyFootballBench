@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Christian McCaffrey,SF,RB,47.80,anthropic/claude-opus-4.1
+Bijan Robinson,ATL,RB,339.70,anthropic/claude-opus-4.1
+Jordan Love,GB,QB,227.86,anthropic/claude-opus-4.1
+Rhamondre Stevenson,NE,RB,171.90,anthropic/claude-opus-4.1
+Stone Smartt,LAC,TE,34.80,anthropic/claude-opus-4.1
+Pat Freiermuth,PIT,TE,168.30,anthropic/claude-opus-4.1
+Justin Herbert,LAC,QB,279.40,anthropic/claude-opus-4.1
+Dak Prescott,DAL,QB,116.52,anthropic/claude-opus-4.1
+Chris Godwin,TB,WR,137.80,anthropic/claude-opus-4.1
+Brian Robinson Jr.,WAS,RB,159.80,anthropic/claude-opus-4.1
+Jakobi Meyers,LV,WR,216.00,anthropic/claude-opus-4.1
+Isiah Pacheco,KC,RB,56.90,anthropic/claude-opus-4.1

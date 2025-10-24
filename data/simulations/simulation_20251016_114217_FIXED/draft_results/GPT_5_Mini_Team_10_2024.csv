@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+A.J. Brown,PHI,WR,216.90,openai/gpt-oss-120b
+Garrett Wilson,NYJ,WR,249.90,openai/gpt-oss-120b
+C.J. Stroud,HOU,QB,220.38,openai/gpt-oss-120b
+James Cook,BUF,RB,266.70,openai/gpt-oss-120b
+Kenneth Walker III,SEA,RB,181.20,openai/gpt-oss-120b
+Dalton Kincaid,BUF,TE,100.80,openai/gpt-oss-120b
+Tank Dell,HOU,WR,140.00,openai/gpt-oss-120b
+Tua Tagovailoa,MIA,QB,177.58,openai/gpt-oss-120b
+Jaylen Warren,PIT,RB,124.10,openai/gpt-oss-120b
+Nick Chubb,CLE,RB,63.30,openai/gpt-oss-120b
+Courtland Sutton,DEN,WR,240.30,openai/gpt-oss-120b
+Devin Singletary,NYG,RB,96.60,openai/gpt-oss-120b

@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Puka Nacua,LAR,WR,206.60,anthropic/claude-sonnet-4
+Michael Pittman Jr.,IND,WR,165.80,anthropic/claude-sonnet-4
+David Njoku,CLE,TE,144.50,anthropic/claude-sonnet-4
+Rashee Rice,KC,WR,64.90,anthropic/claude-sonnet-4
+Zamir White,LV,RB,29.30,anthropic/claude-sonnet-4
+Blake Corum,LAR,RB,33.50,anthropic/claude-sonnet-4
+Jayden Daniels,WAS,QB,349.82,anthropic/claude-sonnet-4
+Noah Fant,SEA,TE,104.00,anthropic/claude-sonnet-4
+Brock Purdy,SF,QB,266.86,anthropic/claude-sonnet-4
+Amari Cooper,BUF,WR,122.70,anthropic/claude-sonnet-4
+Diontae Johnson,HOU,WR,89.10,anthropic/claude-sonnet-4
+Derrick Henry,BAL,RB,336.40,anthropic/claude-sonnet-4

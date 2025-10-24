@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Dak Prescott,DAL,QB,116.52,anthropic/claude-opus-4.1
+Isiah Pacheco,KC,RB,56.90,anthropic/claude-opus-4.1
+James Cook,BUF,RB,266.70,anthropic/claude-opus-4.1
+Aaron Jones,MIN,RB,241.60,anthropic/claude-opus-4.1
+Austin Ekeler,WAS,RB,132.30,anthropic/claude-opus-4.1
+Zay Flowers,BAL,WR,209.50,anthropic/claude-opus-4.1
+Jaxon Smith-Njigba,SEA,WR,253.00,anthropic/claude-opus-4.1
+Luke Musgrave,GB,TE,11.50,anthropic/claude-opus-4.1
+Jonnu Smith,MIA,TE,222.30,anthropic/claude-opus-4.1
+Joe Burrow,CIN,QB,372.82,anthropic/claude-opus-4.1
+Brian Robinson Jr.,WAS,RB,159.80,anthropic/claude-opus-4.1
+Josh Allen,BUF,QB,377.04,anthropic/claude-opus-4.1

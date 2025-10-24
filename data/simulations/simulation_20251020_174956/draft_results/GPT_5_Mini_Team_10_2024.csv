@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+C.J. Stroud,HOU,QB,220.38,openai/gpt-oss-120b
+Davante Adams,NYJ,WR,239.30,openai/gpt-oss-120b
+Evan Engram,JAX,TE,87.50,openai/gpt-oss-120b
+Rhamondre Stevenson,NE,RB,171.90,openai/gpt-oss-120b
+Aaron Jones,MIN,RB,241.60,openai/gpt-oss-120b
+Pat Freiermuth,PIT,TE,168.30,openai/gpt-oss-120b
+Nick Chubb,CLE,RB,63.30,openai/gpt-oss-120b
+Luke Musgrave,GB,TE,11.50,openai/gpt-oss-120b
+CeeDee Lamb,DAL,WR,261.40,openai/gpt-oss-120b
+Antonio Gibson,NE,RB,103.40,openai/gpt-oss-120b
+Tyreek Hill,MIA,WR,218.20,openai/gpt-oss-120b
+Saquon Barkley,PHI,RB,349.30,openai/gpt-oss-120b

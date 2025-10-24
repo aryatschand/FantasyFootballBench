@@ -1,0 +1,79 @@
+Week,Team,Model,Opponent,Player,ResolvedName,Position,Points
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,Patrick Mahomes,Patrick Mahomes,QB,15.76
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,Jahmyr Gibbs,Jahmyr Gibbs,RB,28.40
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,Kenneth Walker III,Kenneth Walker III,RB,0.00
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,Jaylen Waddle,Jaylen Waddle,WR,0.00
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,Jerry Jeudy,Jerry Jeudy,WR,21.80
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,Mark Andrews,Mark Andrews,TE,10.40
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,DJ Moore,DJ Moore,WR,15.00
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,Justin Herbert,Justin Herbert,QB,13.80
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,Rachaad White,Rachaad White,RB,14.10
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,Joe Mixon,Joe Mixon,RB,10.60
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,Tank Dell,Tank Dell,WR,6.10
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,Justin Jefferson,Justin Jefferson,WR,20.30
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,Cole Kmet,Cole Kmet,TE,2.40
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,Javonte Williams,Javonte Williams,RB,4.30
+15,Kimi_K2_Team_4,qwen/qwen3-max,Qwen_3_Max_Team_1,TOTAL,,,91.36
+15,Qwen_3_Max_Team_1,meta-llama/llama-4-maverick,Kimi_K2_Team_4,TOTAL,,,71.60
+15,Gemini_2.5_Flash_Team_6,google/gemini-2.5-pro,Claude_Opus_4.1_Team_8,C.J. Stroud,C.J. Stroud,QB,11.64
+15,Gemini_2.5_Flash_Team_6,google/gemini-2.5-pro,Claude_Opus_4.1_Team_8,David Montgomery,David Montgomery,RB,7.50
+15,Gemini_2.5_Flash_Team_6,google/gemini-2.5-pro,Claude_Opus_4.1_Team_8,Raheem Mostert,Raheem Mostert,RB,5.10
+15,Gemini_2.5_Flash_Team_6,google/gemini-2.5-pro,Claude_Opus_4.1_Team_8,Drake London,Drake London,WR,14.30
+15,Gemini_2.5_Flash_Team_6,google/gemini-2.5-pro,Claude_Opus_4.1_Team_8,George Pickens,George Pickens,WR,0.00
+15,Gemini_2.5_Flash_Team_6,google/gemini-2.5-pro,Claude_Opus_4.1_Team_8,DeAndre Hopkins,DeAndre Hopkins,WR,8.60
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,Josh Jacobs,Josh Jacobs,RB,21.60
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,Alvin Kamara,Alvin Kamara,RB,17.00
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,Davante Adams,Davante Adams,WR,40.80
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,Chris Godwin,Chris Godwin,WR,0.00
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,George Kittle,George Kittle,TE,10.10
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,James Conner,James Conner,RB,30.80
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,Tyler Lockett,Tyler Lockett,WR,3.20
+15,Gemini_2.5_Flash_Team_6,google/gemini-2.5-pro,Claude_Opus_4.1_Team_8,TOTAL,,,47.14
+15,Claude_Opus_4.1_Team_8,openai/gpt-5,Gemini_2.5_Flash_Team_6,TOTAL,,,123.50
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,Jordan Love,Jordan Love,QB,17.56
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,Saquon Barkley,Saquon Barkley,RB,9.40
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,De'Von Achane,De'Von Achane,RB,14.60
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,Ja'Marr Chase,Ja'Marr Chase,WR,18.40
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,Terry McLaurin,Terry McLaurin,WR,26.30
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,Sam LaPorta,Sam LaPorta,TE,18.10
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,Cooper Kupp,Cooper Kupp,WR,0.00
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,Jalen Hurts,Jalen Hurts,QB,28.10
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,Jerome Ford,Jerome Ford,RB,18.40
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,Chase Brown,Chase Brown,RB,26.30
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,Jayden Reed,Jayden Reed,WR,11.10
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,Garrett Wilson,Garrett Wilson,WR,14.60
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,Kyle Pitts,Kyle Pitts,TE,6.80
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,D'Andre Swift,D'Andre Swift,RB,9.90
+15,Gemini_2.5_Pro_Team_5,google/gemini-2.5-flash,GPT_5_Mini_Team_10,TOTAL,,,104.36
+15,GPT_5_Mini_Team_10,openai/gpt-oss-120b,Gemini_2.5_Pro_Team_5,TOTAL,,,115.20
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,Lamar Jackson,Lamar Jackson,QB,36.10
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,Kyren Williams,Kyren Williams,RB,13.20
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,Chuba Hubbard,Chuba Hubbard,RB,8.90
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,Courtland Sutton,Courtland Sutton,WR,12.20
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,Jordan Addison,Jordan Addison,WR,13.30
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,Isaiah Likely,Isaiah Likely,TE,3.70
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,Tony Pollard,Tony Pollard,RB,8.50
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,Brock Purdy,Brock Purdy,QB,3.98
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,Derrick Henry,Derrick Henry,RB,6.70
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,Blake Corum,Blake Corum,RB,4.00
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,Puka Nacua,Puka Nacua,WR,17.80
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,Amari Cooper,Amari Cooper,WR,0.00
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,David Njoku,David Njoku,TE,0.00
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,Michael Pittman Jr.,Michael Pittman Jr.,WR,9.80
+15,Claude_Sonnet_4_Team_2,openai/gpt-5-mini,GPT_5_Team_9,TOTAL,,,95.90
+15,GPT_5_Team_9,anthropic/claude-sonnet-4,Claude_Sonnet_4_Team_2,TOTAL,,,42.28
+15,Llama_4_Maverick_Team_7,moonshotai/kimi-k2-0905,GPT_OSS_Team_3,Trevor Lawrence,Trevor Lawrence,QB,0.00
+15,Llama_4_Maverick_Team_7,moonshotai/kimi-k2-0905,GPT_OSS_Team_3,Tyreek Hill,Tyreek Hill,WR,5.60
+15,Llama_4_Maverick_Team_7,moonshotai/kimi-k2-0905,GPT_OSS_Team_3,Malik Nabers,Malik Nabers,WR,24.20
+15,Llama_4_Maverick_Team_7,moonshotai/kimi-k2-0905,GPT_OSS_Team_3,Brock Bowers,Brock Bowers,TE,6.50
+15,Llama_4_Maverick_Team_7,moonshotai/kimi-k2-0905,GPT_OSS_Team_3,Marvin Harrison Jr.,Marvin Harrison Jr.,WR,5.20
+15,Llama_4_Maverick_Team_7,moonshotai/kimi-k2-0905,GPT_OSS_Team_3,Travis Kelce,Travis Kelce,TE,6.70
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,Josh Allen,Josh Allen,QB,41.28
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,James Cook,James Cook,RB,26.30
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,Aaron Jones,Aaron Jones,RB,18.60
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,Jaxon Smith-Njigba,Jaxon Smith-Njigba,WR,18.30
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,Zay Flowers,Zay Flowers,WR,11.30
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,Jonnu Smith,Jonnu Smith,TE,19.80
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,Brian Robinson Jr.,Brian Robinson Jr.,RB,11.70
+15,Llama_4_Maverick_Team_7,moonshotai/kimi-k2-0905,GPT_OSS_Team_3,TOTAL,,,48.20
+15,GPT_OSS_Team_3,anthropic/claude-opus-4.1,Llama_4_Maverick_Team_7,TOTAL,,,147.28

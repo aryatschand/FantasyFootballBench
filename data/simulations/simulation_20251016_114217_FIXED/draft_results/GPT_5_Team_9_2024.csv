@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Evan Engram,JAX,TE,87.50,anthropic/claude-sonnet-4
+Amari Cooper,BUF,WR,122.70,anthropic/claude-sonnet-4
+James Conner,ARI,RB,249.80,anthropic/claude-sonnet-4
+Tony Pollard,TEN,RB,198.70,anthropic/claude-sonnet-4
+DeAndre Hopkins,KC,WR,147.00,anthropic/claude-sonnet-4
+Tyjae Spears,TEN,RB,113.60,anthropic/claude-sonnet-4
+Chuba Hubbard,CAR,RB,239.60,anthropic/claude-sonnet-4
+Jaleel McLaughlin,DEN,RB,97.20,anthropic/claude-sonnet-4
+Nico Collins,HOU,WR,210.60,anthropic/claude-sonnet-4
+George Kittle,SF,TE,236.60,anthropic/claude-sonnet-4
+Rashee Rice,KC,WR,64.90,anthropic/claude-sonnet-4
+Zay Flowers,BAL,WR,209.50,anthropic/claude-sonnet-4

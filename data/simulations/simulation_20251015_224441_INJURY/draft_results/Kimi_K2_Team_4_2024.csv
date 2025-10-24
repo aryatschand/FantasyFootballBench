@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Christian McCaffrey,SF,RB,47.80,qwen/qwen3-max
+Davante Adams,NYJ,WR,239.30,qwen/qwen3-max
+Jonathan Taylor,IND,RB,246.70,qwen/qwen3-max
+Brandon Aiyuk,SF,WR,62.40,qwen/qwen3-max
+Kyler Murray,ARI,QB,295.24,qwen/qwen3-max
+Jaxon Smith-Njigba,SEA,WR,253.00,qwen/qwen3-max
+Xavier Worthy,KC,WR,187.20,qwen/qwen3-max
+Chuba Hubbard,CAR,RB,239.60,qwen/qwen3-max
+Patrick Mahomes,KC,QB,283.02,qwen/qwen3-max
+Mike Evans,TB,WR,240.40,qwen/qwen3-max
+Gus Edwards,LAC,RB,64.10,qwen/qwen3-max
+George Kittle,SF,TE,236.60,qwen/qwen3-max

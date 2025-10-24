@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Isiah Pacheco,KC,RB,56.90,anthropic/claude-opus-4.1
+Ryan Miller,TB,WR,36.80,anthropic/claude-opus-4.1
+Dallas Goedert,PHI,TE,103.60,anthropic/claude-opus-4.1
+Dan Chisena,CAR,WR,6.70,anthropic/claude-opus-4.1
+Pat Freiermuth,PIT,TE,168.30,anthropic/claude-opus-4.1
+Justin Herbert,LAC,QB,279.40,anthropic/claude-opus-4.1
+Juwan Johnson,NO,TE,122.80,anthropic/claude-opus-4.1
+Alvin Kamara,NO,RB,265.30,anthropic/claude-opus-4.1
+George Pickens,PIT,WR,164.40,anthropic/claude-opus-4.1
+Aaron Jones,MIN,RB,241.60,anthropic/claude-opus-4.1
+Brock Purdy,SF,QB,266.86,anthropic/claude-opus-4.1
+Terry McLaurin,WAS,WR,267.80,anthropic/claude-opus-4.1

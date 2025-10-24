@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Zach Wilson,DEN,QB,0.00,anthropic/claude-opus-4.1
+De'Von Achane,MIA,RB,299.90,anthropic/claude-opus-4.1
+DK Metcalf,SEA,WR,191.20,anthropic/claude-opus-4.1
+James Cook,BUF,RB,266.70,anthropic/claude-opus-4.1
+Mecole Hardman,KC,WR,33.20,anthropic/claude-opus-4.1
+Jared Goff,DET,QB,322.46,anthropic/claude-opus-4.1
+Stone Smartt,LAC,TE,34.80,anthropic/claude-opus-4.1
+Kyler Murray,ARI,QB,295.24,anthropic/claude-opus-4.1
+Cade Otton,TB,TE,140.60,anthropic/claude-opus-4.1
+Terry McLaurin,WAS,WR,267.80,anthropic/claude-opus-4.1
+Mark Andrews,BAL,TE,188.80,anthropic/claude-opus-4.1
+Jerome Ford,CLE,RB,134.00,anthropic/claude-opus-4.1

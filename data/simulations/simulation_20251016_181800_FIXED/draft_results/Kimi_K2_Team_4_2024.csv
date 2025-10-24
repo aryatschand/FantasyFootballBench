@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Patrick Mahomes,KC,QB,283.02,qwen/qwen3-max
+Jahmyr Gibbs,DET,RB,362.90,qwen/qwen3-max
+Mike Evans,TB,WR,240.40,qwen/qwen3-max
+Brandon Aiyuk,SF,WR,62.40,qwen/qwen3-max
+Kenneth Walker III,SEA,RB,181.20,qwen/qwen3-max
+Jaylen Waddle,MIA,WR,145.60,qwen/qwen3-max
+Tee Higgins,CIN,WR,222.10,qwen/qwen3-max
+Will Levis,TEN,QB,117.94,qwen/qwen3-max
+Jerry Jeudy,CLE,WR,236.90,qwen/qwen3-max
+DJ Moore,CHI,WR,236.10,qwen/qwen3-max
+Mark Andrews,BAL,TE,188.80,qwen/qwen3-max
+Devin Singletary,NYG,RB,96.60,qwen/qwen3-max

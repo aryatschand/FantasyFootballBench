@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Jordan Love,GB,QB,227.86,anthropic/claude-sonnet-4
+DJ Moore,CHI,WR,236.10,anthropic/claude-sonnet-4
+Jaylen Warren,PIT,RB,124.10,anthropic/claude-sonnet-4
+Christian Kirk,JAX,WR,70.90,anthropic/claude-sonnet-4
+Zack Moss,CIN,RB,81.90,anthropic/claude-sonnet-4
+Jared Goff,DET,QB,322.46,anthropic/claude-sonnet-4
+Kyle Trask,TB,QB,-0.20,anthropic/claude-sonnet-4
+Travis Kelce,KC,TE,195.40,anthropic/claude-sonnet-4
+Trey McBride,ARI,TE,249.80,anthropic/claude-sonnet-4
+Nico Collins,HOU,WR,210.60,anthropic/claude-sonnet-4
+Evan Engram,JAX,TE,87.50,anthropic/claude-sonnet-4
+Michael Pittman Jr.,IND,WR,165.80,anthropic/claude-sonnet-4

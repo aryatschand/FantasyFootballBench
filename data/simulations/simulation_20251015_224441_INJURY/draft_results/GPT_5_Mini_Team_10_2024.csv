@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+C.J. Stroud,HOU,QB,220.38,openai/gpt-oss-120b
+James Conner,ARI,RB,249.80,openai/gpt-oss-120b
+Stefon Diggs,HOU,WR,121.92,openai/gpt-oss-120b
+Raheem Mostert,MIA,RB,70.90,openai/gpt-oss-120b
+Jayden Daniels,WAS,QB,349.82,openai/gpt-oss-120b
+Jerome Ford,CLE,RB,134.00,openai/gpt-oss-120b
+DeAndre Hopkins,KC,WR,147.00,openai/gpt-oss-120b
+Tua Tagovailoa,MIA,QB,177.58,openai/gpt-oss-120b
+Justin Jefferson,MIN,WR,317.48,openai/gpt-oss-120b
+Jahmyr Gibbs,DET,RB,362.90,openai/gpt-oss-120b
+Kyle Pitts,ATL,TE,131.20,openai/gpt-oss-120b
+Keenan Allen,CHI,WR,184.40,openai/gpt-oss-120b

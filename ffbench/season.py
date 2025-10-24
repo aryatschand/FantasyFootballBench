@@ -27,8 +27,8 @@ class Season:
 
         for team1, team2 in matchups:
             # 1. Get starters for each team (LLM interaction)
-            team1_starters = team1.llm_manager.choose_starters(team1, week, {team1.team_id: team2.manager_name})
-            team2_starters = team2.llm_manager.choose_starters(team2, week, {team2.team_id: team1.manager_name})
+            team1_starters = team1.llm_manager.choose_starters(team1, week, {team1.team_id: team2.manager_name}, weekly_stats)
+            team2_starters = team2.llm_manager.choose_starters(team2, week, {team2.team_id: team1.manager_name}, weekly_stats)
             team1.set_starters(week, team1_starters)
             team2.set_starters(week, team2_starters)
 

@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Kyle Pitts,ATL,TE,131.20,openai/gpt-oss-120b
+Jerome Ford,CLE,RB,134.00,openai/gpt-oss-120b
+Jayden Reed,GB,WR,197.00,openai/gpt-oss-120b
+Chase Brown,CIN,RB,253.00,openai/gpt-oss-120b
+D'Andre Swift,CHI,RB,212.50,openai/gpt-oss-120b
+Garrett Wilson,NYJ,WR,249.90,openai/gpt-oss-120b
+Jalen Hurts,PHI,QB,315.12,openai/gpt-oss-120b
+A.J. Brown,PHI,WR,216.90,openai/gpt-oss-120b
+Nico Collins,HOU,WR,210.60,openai/gpt-oss-120b
+Trey McBride,ARI,TE,249.80,openai/gpt-oss-120b
+Jonathan Taylor,IND,RB,246.70,openai/gpt-oss-120b
+CeeDee Lamb,DAL,WR,261.40,openai/gpt-oss-120b

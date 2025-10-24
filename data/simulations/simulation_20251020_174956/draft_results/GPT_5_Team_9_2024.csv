@@ -1,0 +1,13 @@
+Name,Team,Position,FantasyPoints,Model
+Puka Nacua,LAR,WR,206.60,anthropic/claude-sonnet-4
+Rachaad White,TB,RB,199.60,anthropic/claude-sonnet-4
+Zay Flowers,BAL,WR,209.50,anthropic/claude-sonnet-4
+Courtland Sutton,DEN,WR,240.30,anthropic/claude-sonnet-4
+Chuba Hubbard,CAR,RB,239.60,anthropic/claude-sonnet-4
+Ezekiel Elliott,DAL,RB,57.50,anthropic/claude-sonnet-4
+Jordan Love,GB,QB,227.86,anthropic/claude-sonnet-4
+Christian Watson,GB,WR,103.30,anthropic/claude-sonnet-4
+Jake Ferguson,DAL,TE,104.40,anthropic/claude-sonnet-4
+Zack Moss,CIN,RB,81.90,anthropic/claude-sonnet-4
+Nico Collins,HOU,WR,210.60,anthropic/claude-sonnet-4
+Anthony Richardson,IND,QB,161.36,anthropic/claude-sonnet-4
