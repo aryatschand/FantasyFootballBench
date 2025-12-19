@@ -48,5 +48,9 @@ Thumbs.db
 # data/draft_results/
 # data/season_results/
 
+# Generated figures and icons
+figures/
+icons/
+
 # AWS credentials (if any)
 .aws/
