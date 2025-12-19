@@ -1,4 +1,4 @@
-# FantasyFootballBench: A Verifiable LLM Benchmark for Strategic Decision-Making
+# FantasyFootballBench: Evaluating LLM Negotiation and Long-Horizon Decision Making
 
 ## Abstract
 
