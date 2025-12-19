@@ -912,30 +912,3 @@ The framework's key contributions are:
 4. **Reproducibility** with open-source simulation pipeline
 
 We hope FantasyFootballBench serves as a model for future benchmarks that evaluate AI systems in realistic, high-stakes decision-making scenarios.
-
----
-
-## Citation
-
-If you use FantasyFootballBench in your research, please cite:
-
-```bibtex
-@misc{fantasyfootballbench2024,
-  title={FantasyFootballBench: A Verifiable LLM Benchmark for Strategic Decision-Making},
-  author={[Authors]},
-  year={2024},
-  note={Data partnership with SportsData.io}
-}
-```
-
----
-
-## Acknowledgments
-
-This research was made possible through a data partnership with **SportsData.io**, which provided proprietary NFL statistics for the 2022-2024 seasons. We thank the SportsData.io team for their support in enabling verifiable sports analytics research.
-
----
-
-## License
-
-[To be determined based on data partnership agreements and code licensing preferences]
