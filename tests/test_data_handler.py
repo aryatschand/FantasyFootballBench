@@ -4,12 +4,9 @@ Comprehensive tests for the improved DataHandler class.
 Tests all the new data access functions for player stats.
 """
 
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from datetime import datetime
 
 from ffbench.data_handler import DataHandler
-from datetime import datetime
 
 def test_data_handler():
     """Test all DataHandler functions."""

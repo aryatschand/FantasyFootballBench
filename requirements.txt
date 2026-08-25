@@ -1,3 +1,10 @@
-nfl_data_py
-pandas
-openai
+# Core simulation
+pandas>=2.0
+numpy>=1.24
+openai>=1.30          # OpenRouter is called through the OpenAI-compatible client
+dspy>=2.5             # LM base class + signature definitions used by ffbench.llm
+
+# Figure generation (scripts/generate_blog_figures.py)
+matplotlib>=3.7
+pillow>=10.0
+imageio>=2.31

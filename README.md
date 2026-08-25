@@ -14,6 +14,94 @@ This work contributes: (1) a comprehensive benchmark framework for strategic mul
 
 ---
 
+## Quickstart
+
+```bash
+git clone git@github.com:aryatschand/FantasyFootballBench.git
+cd FantasyFootballBench
+
+make setup                       # creates .venv, installs deps, writes .env from the template
+$EDITOR .env                     # add your OPENROUTER_API_KEY
+
+make run                         # full pipeline: connectivity check -> draft -> 17-week season
+```
+
+Every model call is routed through [OpenRouter](https://openrouter.ai), so a single
+`OPENROUTER_API_KEY` covers all providers listed in `config.json`.
+
+### Running individual phases
+
+The pipeline is also exposed as a single CLI (`scripts/run_full_simulation.sh` is a thin
+wrapper around `python main.py all`):
+
+```bash
+python main.py check             # verify every model in config.json responds
+python main.py export            # export projection-based player rankings
+python main.py draft             # run the draft (--resume to continue an interrupted one)
+python main.py season            # run the season (--start-week N to resume mid-season)
+python main.py all               # everything, in order
+python main.py figures           # regenerate analysis figures
+python main.py demo              # sample DataHandler queries, no API calls
+```
+
+Phases share a simulation id (`FFBENCH_SIM_ID`). If unset, a new one is created and recorded
+in `data/simulations/latest_simulation_id.txt`, which later phases pick up automatically.
+
+### Environment variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `OPENROUTER_API_KEY` | yes | Auth for all model calls |
+| `FFBENCH_CONFIG` | no | Path to an alternate league config (default `./config.json`) |
+| `FFBENCH_SIM_ID` | no | Reuse an existing simulation directory instead of creating one |
+| `FFBENCH_SITE_URL` / `FFBENCH_SITE_TITLE` | no | Attribution headers sent to OpenRouter |
+| `FFBENCH_STARTSIT_MODEL` | no | Fallback model for start/sit calls |
+
+See `.env.example` for the full template.
+
+### Tests
+
+```bash
+make test        # offline suite only (no API calls, no cost)
+make test-all    # adds live model connectivity + end-to-end draft checks
+```
+
+Tests that hit the API are marked `network` and skip automatically when
+`OPENROUTER_API_KEY` is absent.
+
+---
+
+## Repository Structure
+
+```
+main.py                      Unified CLI entry point for every benchmark phase
+config.json                  League config: models, roster slots, scoring, trade weeks
+ffbench/                     Core library
+  config.py                    Config loading, validation, prompt formatting helpers
+  core.py                      Player / Team / League domain objects
+  data_handler.py              Natural-language stat lookups over the NFL dataset
+  llm.py                       OpenRouter client, LLMManager, DSPy signatures
+  scoring.py                   PPR fantasy point calculation
+  draft.py, season.py, trade.py  Phase logic
+  env.py                       Minimal .env loader
+scripts/                     Runnable pipeline steps
+  run_full_simulation.sh       Full pipeline wrapper
+  export_top_players.py        Projection export used to seed the draft
+  run_draft.py                 Draft simulation (supports resume / quick-complete)
+  simulate_season.py           17-week season: start/sit, matchups, trades
+  generate_blog_figures.py     Analysis figures (written to figures/, git-ignored)
+  test_models_from_config.py   Model connectivity check
+  demo_data_access.py          Sample DataHandler queries
+tests/                       pytest suite (offline by default, `network` marker for live calls)
+data/
+  2022/ 2023/ 2024/            Weekly stats and projections by season
+  other/                       Player, team, and timeframe reference tables
+  simulations/{sim_id}/        Per-run draft_results/ and season_results/ outputs
+```
+
+
+---
+
 ## 1. Introduction and Background
 
 ### 1.1 Motivation
@@ -842,17 +930,25 @@ This ensures the benchmark evaluates **pure reasoning capabilities** using only 
 
 ### 4.1 Running the Benchmark
 
-Full simulations are executed via the pipeline script:
+Full simulations are executed via the CLI (see [Quickstart](#quickstart) for setup):
 ```bash
-export OPENROUTER_API_KEY="your_api_key"
+python main.py all
+# or the equivalent wrapper, which also loads .env and activates .venv:
 bash scripts/run_full_simulation.sh
 ```
 
 This sequentially runs:
-1. Model connectivity test (`test_models_from_config.py`)
-2. Projection data export (`export_top_players.py`)
-3. Draft simulation (`run_draft.py`)
-4. Season simulation (`simulate_season.py`)
+1. Model connectivity test (`scripts/test_models_from_config.py`)
+2. Projection data export (`scripts/export_top_players.py`)
+3. Draft simulation (`scripts/run_draft.py`)
+4. Season simulation (`scripts/simulate_season.py`)
+
+Each phase can also be run on its own — useful when a long run is interrupted:
+```bash
+python main.py draft --resume                  # continue an in-progress draft
+python main.py season --start-week 8           # resume the season mid-way
+FFBENCH_SIM_ID=simulation_20241020_174956 python main.py season   # target a specific run
+```
 
 ### 4.2 Configuration
 
@@ -863,14 +959,26 @@ All league parameters are centralized in `config.json`:
 - `trade_weeks`: Specific weeks for trade negotiations
 - `season_weeks`: Number of weeks to simulate (17 for full season)
 
-Researchers can easily modify these to test alternative league formats (e.g., standard vs. PPR scoring, different roster sizes).
+Researchers can easily modify these to test alternative league formats (e.g., standard vs. PPR scoring, different roster sizes). To evaluate several league formats without editing the default file, point `FFBENCH_CONFIG` at an alternate config:
+
+```bash
+FFBENCH_CONFIG=configs/standard_scoring.json python main.py all
+```
+
+If fewer models are listed than `num_teams`, the list is repeated to fill the league.
 
 ### 4.3 Data Access
 
 The benchmark requires access to SportsData.io proprietary data (2022-2024 NFL seasons). Researchers interested in replicating the benchmark can:
 1. Obtain a SportsData.io API key (partnership or paid access)
-2. Use the provided data scraper (`scripts/data_scraper.py`) to populate local data files
+2. Populate `data/{year}/{week}/` with `PlayerGameStatsByWeek.csv`,
+   `PlayerGameProjectionStatsByWeek.csv`, `FantasyDefenseByGame.csv`, and
+   `FantasyDefenseProjectionsByGame.csv`, plus the reference tables in `data/other/`
+   (`Players.csv`, `Teams.csv`, `FreeAgents.csv`, `Timeframes.csv`)
 3. Run the full simulation pipeline
+
+The 2022-2024 data required for the published results is committed to this repository, so
+the pipeline runs as-is without any additional data access.
 
 ### 4.4 Extending the Benchmark
 

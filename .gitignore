@@ -54,3 +54,14 @@ icons/
 
 # AWS credentials (if any)
 .aws/
+# Secrets
+.env
+.env.local
+*.pem
+
+# Test / tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
